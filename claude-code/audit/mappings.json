@@ -1,0 +1,1093 @@
+{
+  "about": "Why each audit check matters, and how it maps to AI security frameworks. Mappings are AISecurityLabs.org's interpretation, verified against the framework versions shown with them; they are not endorsed by the framework owners.",
+  "frameworks": {
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "items": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "version": "2026",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "items": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "mitre_atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.09",
+      "url": "https://atlas.mitre.org/",
+      "items": {
+        "AML.T0010": "AI Supply Chain Compromise",
+        "AML.T0010.005": "AI Supply Chain Compromise: AI Agent Tool",
+        "AML.T0011.002": "User Execution: Poisoned AI Agent Tool",
+        "AML.T0025": "Exfiltration via Cyber Means",
+        "AML.T0050": "Command and Scripting Interpreter",
+        "AML.T0051": "LLM Prompt Injection",
+        "AML.T0051.001": "LLM Prompt Injection: Indirect",
+        "AML.T0053": "AI Agent Tool Invocation",
+        "AML.T0055": "Unsecured Credentials",
+        "AML.T0057": "LLM Data Leakage",
+        "AML.T0074": "Masquerading",
+        "AML.T0080": "AI Agent Context Poisoning",
+        "AML.T0081": "Modify AI Agent Configuration",
+        "AML.T0083": "Credentials from AI Agent Configuration",
+        "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
+        "AML.T0098": "AI Agent Tool Credential Harvesting",
+        "AML.T0099": "AI Agent Tool Data Poisoning",
+        "AML.T0101": "Data Destruction via AI Agent Tool Invocation",
+        "AML.T0105": "Escape to Host",
+        "AML.T0109": "AI Supply Chain Rug Pull",
+        "AML.T0110": "AI Agent Tool Poisoning",
+        "AML.T0112.000": "Machine Compromise: Local AI Agent"
+      }
+    },
+    "nist_ai_rmf": {
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "url": "https://airc.nist.gov/airmf-resources/playbook/",
+      "items": {
+        "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+        "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+        "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components – including the use of third-party data or software – are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
+        "MEASURE 2.7": "AI system security and resilience – as identified in the MAP function – are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system – as identified in the MAP function – is examined and documented.",
+        "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+        "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+        "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
+      }
+    }
+  },
+  "checks": {
+    "I01": {
+      "why": "Security fixes for Claude Code itself ship in new releases — for example, project files that ran before the trust dialog (CVE-2025-59536, fixed in 1.0.111) and the Plugin4Shell plugin swap (fixed in 2.1.179). Older versions stay exploitable and lack newer protections such as the strict network allowlist (2.1.219).",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000",
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Advanced setup",
+          "url": "https://code.claude.com/docs/en/setup"
+        },
+        {
+          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+        },
+        {
+          "title": "NVD — CVE-2025-59536",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-59536"
+        },
+        {
+          "title": "AIR Security — Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        },
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U00": {
+      "why": "Without your user settings the audit cannot assess the sandbox, permissions or credential protection — the controls that matter most.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        }
+      ]
+    },
+    "U01": {
+      "why": "Without a valid settings file Claude Code runs on defaults: no OS sandbox, no deny rules, no credential protection. The agent can read and run anything your user account can.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0053",
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        },
+        {
+          "title": "Claude Code docs — Security",
+          "url": "https://code.claude.com/docs/en/security"
+        }
+      ]
+    },
+    "U02": {
+      "why": "The sandbox is the only control the operating system enforces on every command and its child processes. Without it, a single successful prompt injection — from a README, issue, web page or tool output — can read any file and reach any host your account can.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0050",
+        "AML.T0053",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        },
+        {
+          "title": "Claude Code docs — Security",
+          "url": "https://code.claude.com/docs/en/security"
+        }
+      ]
+    },
+    "U03": {
+      "why": "Without strict mode, a command that fails inside the sandbox can be retried outside it. That retry is exactly the escape hatch an injected command needs.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0105",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U04": {
+      "why": "Without a strict allowlist, requests to unknown hosts become approval prompts. One hurried click is enough to send data to an attacker's server.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U05": {
+      "why": "The sandbox proxy allows traffic by hostname and does not inspect what is sent. Allowing github.com, paste sites or webhook services gives an injected command a ready-made place to upload your code and secrets.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U06": {
+      "why": "By default, sandboxed commands can still read SSH keys and cloud credentials. Stolen keys give an attacker access far beyond your laptop: servers, repositories and cloud accounts.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055",
+        "AML.T0098"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U07": {
+      "why": ".env files hold API keys and database connection strings. Once read, they sit in the model's context and your local transcripts, where they can be leaked or sent onward.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055",
+        "AML.T0057"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    },
+    "U08": {
+      "why": "curl and wget are the simplest way for an injected instruction to exfiltrate data or download a second-stage payload.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "title": "Adversa AI — Claude Code deny rules silently bypassed (Apr 2, 2026)",
+          "url": "https://adversa.ai/blog/critical-claude-code-vulnerability-deny-rules-silently-bypassed-because-security-checks-cost-too-many-tokens/"
+        }
+      ]
+    },
+    "U09": {
+      "why": "Allow rules run with no human check. Auto-allowed push, container or delete commands let a hijacked session publish code, reach the host through Docker, or destroy data before anyone sees it.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0053",
+        "AML.T0101",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    },
+    "U10": {
+      "why": "Pushing is the moment local mistakes or injected code leave your machine and reach CI, reviewers and users. A human should confirm it.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    },
+    "U11": {
+      "why": "Auto-enabling every MCP server a repository declares means that simply opening a cloned repository can start third-party code with your credentials.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002",
+        "AML.T0110"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        },
+        {
+          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+        },
+        {
+          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
+        }
+      ]
+    },
+    "U12": {
+      "why": "Additional directories extend where the agent may write — often into other projects or dotfiles — well beyond the project you are working on.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    },
+    "U13": {
+      "why": "Bypass mode skips every permission check, including protected paths. Any injected instruction runs immediately, with no chance for you to intervene.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0051",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        },
+        {
+          "title": "Claude Code docs — Security",
+          "url": "https://code.claude.com/docs/en/security"
+        }
+      ]
+    },
+    "U14": {
+      "why": "Transcripts store code, prompts, tool output and any secret that entered the context. The longer they are kept, the more a stolen laptop, backup or compromised account exposes.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [],
+      "mitre_atlas": [
+        "AML.T0057"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        }
+      ]
+    },
+    "U15": {
+      "why": "The settings env block is injected into every session and every subprocess, so the agent and every tool it runs can read — and leak — those secrets.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0083",
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        }
+      ]
+    },
+    "U16": {
+      "why": "Access to the Docker socket lets a sandboxed command start a privileged container and take over the host — a complete sandbox escape.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Sandboxing",
+          "url": "https://code.claude.com/docs/en/sandboxing"
+        }
+      ]
+    },
+    "U17": {
+      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code — fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0109",
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "AIR Security — Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        },
+        {
+          "title": "Help Net Security — Plugin4Shell (Sep 18, 2026)",
+          "url": "https://www.helpnetsecurity.com/2026/09/18/plugin4shell-ai-coding-agents-vulnerability/"
+        },
+        {
+          "title": "Claude Code docs — Plugins",
+          "url": "https://code.claude.com/docs/en/plugins/overview"
+        }
+      ]
+    },
+    "H01": {
+      "why": "Permission rules match command text and can be talked around. A Bash hook blocks destructive, pipe-to-shell and secret-touching commands deterministically, with no prompt to click through.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0101",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Hooks guide",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        },
+        {
+          "title": "Adversa AI — Claude Code deny rules silently bypassed (Apr 2, 2026)",
+          "url": "https://adversa.ai/blog/critical-claude-code-vulnerability-deny-rules-silently-bypassed-because-security-checks-cost-too-many-tokens/"
+        }
+      ]
+    },
+    "H02": {
+      "why": "Without a file hook, the agent can edit its own settings, CI workflows, lockfiles or .env files — persistent changes that outlive the session and affect everyone who uses the repository.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI06",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Hooks guide",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        },
+        {
+          "title": "Adversa AI — SymJack: the approval prompt is lying to you (May 26, 2026)",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        }
+      ]
+    },
+    "H03": {
+      "why": "A hook that doesn't actually block anything gives false confidence. The test suite proves each dangerous pattern is really stopped.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Hooks guide",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
+    },
+    "P00": {
+      "why": "Project configuration (.claude/, .mcp.json, CLAUDE.md) is where cloned repositories can change how the agent behaves; auditing a project checks it.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Security",
+          "url": "https://code.claude.com/docs/en/security"
+        }
+      ]
+    },
+    "P01": {
+      "why": "Invalid settings files are ignored, so the protections you believe are configured may not be loaded at all.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Settings reference",
+          "url": "https://code.claude.com/docs/en/settings-reference"
+        }
+      ]
+    },
+    "P02": {
+      "why": "A repository that auto-enables its own MCP servers starts third-party code with your credentials as soon as you work in it.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — MCP",
+          "url": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+        },
+        {
+          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
+        }
+      ]
+    },
+    "P03": {
+      "why": "Hooks are shell code that runs with your privileges on every tool call. A repository that ships hooks can run code the moment you work in it; one that downloads code hands a remote party execution on your machine.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Hooks guide",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        },
+        {
+          "title": "StepSecurity — Miasma worm hits Microsoft (Jun 2026)",
+          "url": "https://www.stepsecurity.io/blog/miasma-worm-hits-microsoft-again-azure-functions-action-and-72-other-repositories-disabled-after-supply-chain-attack-targeting-ai-coding-agents"
+        },
+        {
+          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+        }
+      ]
+    },
+    "P04": {
+      "why": "Every MCP server is third-party code with its own credentials, and its output flows straight into the model — both a supply-chain risk and a prompt-injection channel.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0051.001"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — MCP",
+          "url": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "title": "ToolLeak (arXiv 2509.05755)",
+          "url": "https://arxiv.org/abs/2509.05755"
+        }
+      ]
+    },
+    "P05": {
+      "why": "An unpinned MCP server fetches whatever version is published when it starts. A hijacked or 'rug-pulled' release then runs automatically on your machine.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0109",
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — MCP",
+          "url": "https://code.claude.com/docs/en/mcp"
+        }
+      ]
+    },
+    "P06": {
+      "why": "CLAUDE.md is loaded into every session as instructions. A repository can use it for persistent prompt injection, telling the agent to download and run code.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Memory (CLAUDE.md)",
+          "url": "https://code.claude.com/docs/en/memory"
+        }
+      ]
+    },
+    "P07": {
+      "why": "Project rules steer generated code away from hardcoded secrets, eval and unapproved network calls. They are advisory, but they reduce risky output at the source.",
+      "owasp_llm": [
+        "LLM05",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Memory (CLAUDE.md)",
+          "url": "https://code.claude.com/docs/en/memory"
+        }
+      ]
+    },
+    "P08": {
+      "why": "An .env file that is not gitignored can be committed — by you or by the agent — and published with every secret in it.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    },
+    "P09": {
+      "why": "A SessionStart hook runs the moment you start Claude Code in the repository — no tool call, no prompt. In June 2026 the Miasma worm used exactly this: a compromised contributor commit to Azure/durabletask planted a .claude/settings.json SessionStart hook that harvested developer and cloud credentials when the repository was opened. GitHub disabled 73 Microsoft repositories in response.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MAP 4.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "StepSecurity — Miasma worm hits Microsoft (Jun 2026)",
+          "url": "https://www.stepsecurity.io/blog/miasma-worm-hits-microsoft-again-azure-functions-action-and-72-other-repositories-disabled-after-supply-chain-attack-targeting-ai-coding-agents"
+        },
+        {
+          "title": "The Hacker News — Miasma worm hits 73 Microsoft GitHub repositories",
+          "url": "https://thehackernews.com/2026/06/miasma-worm-hits-73-microsoft-github.html"
+        },
+        {
+          "title": "Adversa AI — Top 10 attacks on Claude Code (Sep 23, 2026)",
+          "url": "https://adversa.ai/blog/claude-code-vulnerabilities/"
+        },
+        {
+          "title": "Claude Code docs — Hooks guide",
+          "url": "https://code.claude.com/docs/en/hooks-guide"
+        }
+      ]
+    },
+    "P10": {
+      "why": "Accepting the folder-trust prompt starts the project's local MCP servers as native processes with your full privileges, outside the sandbox. Adversa AI's TrustFall research showed a repository can turn that into code execution — including unattended through the official GitHub Action. Anthropic treats the trust prompt as consent, so this is not a bug that will be patched.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
+        },
+        {
+          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+        },
+        {
+          "title": "Claude Code docs — MCP",
+          "url": "https://code.claude.com/docs/en/mcp"
+        }
+      ]
+    },
+    "P11": {
+      "why": "A link with an innocent name can point at your agent configuration or shell startup files. Researchers showed approval prompts displaying the harmless name while the write landed on the real target, planting an MCP server or backdooring a dotfile (Adversa AI's SymJack, in six coding agents; Wiz's GhostApproval).",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0074",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI — SymJack: the approval prompt is lying to you (May 26, 2026)",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        },
+        {
+          "title": "Wiz — GhostApproval (Jul 8, 2026)",
+          "url": "https://www.wiz.io/blog/ghostapproval-a-trust-boundary-gap-in-ai-coding-assistants"
+        }
+      ]
+    },
+    "P12": {
+      "why": "Error trackers, tickets, chat and email carry text written by outsiders, and it reaches the model as tool output. Tenet Security's Agentjacking research planted fake Sentry errors with \"fix\" instructions and reported an 85% success rate against Claude Code, Cursor and Codex, with 2,388 organisations exposing DSNs that accepted injected events.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News — Agentjacking (Jun 12, 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "The Next Web — Agentjacking",
+          "url": "https://thenextweb.com/news/agentjacking-ai-coding-agents-sentry"
+        },
+        {
+          "title": "ToolLeak (arXiv 2509.05755)",
+          "url": "https://arxiv.org/abs/2509.05755"
+        }
+      ]
+    },
+    "P13": {
+      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code — fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0109",
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "AIR Security — Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        },
+        {
+          "title": "Help Net Security — Plugin4Shell (Sep 18, 2026)",
+          "url": "https://www.helpnetsecurity.com/2026/09/18/plugin4shell-ai-coding-agents-vulnerability/"
+        },
+        {
+          "title": "Claude Code docs — Plugins",
+          "url": "https://code.claude.com/docs/en/plugins/overview"
+        }
+      ]
+    },
+    "M01": {
+      "why": "User-level MCP servers load in every project. Knowing which ones you run — and where they came from — is the first step in managing third-party risk.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — MCP",
+          "url": "https://code.claude.com/docs/en/mcp"
+        }
+      ]
+    },
+    "M02": {
+      "why": "Your user-level MCP servers load in every project. Error trackers, tickets, chat and email carry text written by outsiders, and it reaches the model as tool output. Tenet Security's Agentjacking research planted fake Sentry errors with \"fix\" instructions and reported an 85% success rate against Claude Code, Cursor and Codex, with 2,388 organisations exposing DSNs that accepted injected events.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News — Agentjacking (Jun 12, 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "The Next Web — Agentjacking",
+          "url": "https://thenextweb.com/news/agentjacking-ai-coding-agents-sentry"
+        },
+        {
+          "title": "ToolLeak (arXiv 2509.05755)",
+          "url": "https://arxiv.org/abs/2509.05755"
+        }
+      ]
+    },
+    "R01": {
+      "why": "A shell alias that adds --dangerously-skip-permissions silently turns off every permission check in every session you start.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Claude Code docs — Permissions",
+          "url": "https://code.claude.com/docs/en/permissions"
+        }
+      ]
+    }
+  }
+}

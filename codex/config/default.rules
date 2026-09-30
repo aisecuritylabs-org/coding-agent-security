@@ -1,0 +1,74 @@
+# ~/.codex/rules/default.rules: AISecurityLabs.org command rules for Codex.
+#
+# Rules match the start of a command: "prompt" asks you before it runs,
+# "forbidden" refuses it, and "allow" lets it run outside the sandbox without
+# asking. When several rules match, the strictest wins. A rule with no decision
+# is an allow rule, so every rule here states its decision.
+#
+# Codex splits simple `bash -lc "a && b"` scripts into separate commands before
+# checking rules. Scripts it can't split (redirections, $(...), variables) are
+# checked as one `bash` command, which the last rule sends to you for approval.
+# Remove that rule if the prompts get in your way.
+#
+# Codex checks the match / not_match examples when it loads this file.
+# Test a command with:
+#   codex execpolicy check --pretty --rules ~/.codex/rules/default.rules -- git push
+# Restart Codex after editing.
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Pushing publishes code: read what is being pushed first",
+    match = ["git push", "git push origin main"],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = ["git", ["reset", "clean"]],
+    decision = "prompt",
+    justification = "Discards local work",
+    match = ["git reset --hard", "git clean -fdx"],
+)
+
+prefix_rule(
+    pattern = ["rm", ["-rf", "-fr", "-r", "-R"]],
+    decision = "forbidden",
+    justification = "Recursive deletes are blocked: delete the files yourself if you really mean it",
+    match = ["rm -rf build", "rm -r dist"],
+    not_match = ["rm notes.txt"],
+)
+
+prefix_rule(
+    pattern = [["sudo", "su", "doas"]],
+    decision = "forbidden",
+    justification = "No privilege escalation from the agent",
+    match = ["sudo apt install jq"],
+)
+
+prefix_rule(
+    pattern = [["curl", "wget"]],
+    decision = "prompt",
+    justification = "Network transfers can download code or upload data",
+    match = ["curl https://example.com", "wget https://example.com/x"],
+)
+
+prefix_rule(
+    pattern = [["npm", "pnpm", "yarn"], "publish"],
+    decision = "prompt",
+    justification = "Publishing a package",
+    match = ["npm publish", "pnpm publish --access public"],
+)
+
+prefix_rule(
+    pattern = [["terraform", "kubectl", "helm"]],
+    decision = "prompt",
+    justification = "Infrastructure and cluster commands",
+    match = ["terraform apply", "kubectl delete pod web"],
+)
+
+prefix_rule(
+    pattern = [["bash", "sh", "zsh", "pwsh", "powershell"]],
+    decision = "prompt",
+    justification = "A shell entrypoint can hide any command",
+    match = ["bash -c 'echo hi; echo there > out.txt'"],
+)

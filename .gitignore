@@ -1,0 +1,14 @@
+# Local-only files — never committed
+.publish-blocklist
+drafts/
+*.docx
+*.zip
+*.csv
+.env
+.env.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

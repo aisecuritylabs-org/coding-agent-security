@@ -1,0 +1,70 @@
+# ~/.codex/config.toml: AISecurityLabs.org baseline for a developer laptop.
+#
+# Every key is from the Codex configuration reference
+# (https://developers.openai.com/codex/config-reference). Check them against
+# the reference for your Codex version before relying on them.
+#
+# This file uses a permission profile, which is the only way to deny reads of
+# secrets from your own config. Don't also set the older sandbox_mode or
+# [sandbox_workspace_write] keys: Codex uses those instead of the profile if
+# any loaded config sets them.
+
+# Ask before anything leaves the sandbox. "untrusted" is retired and "never"
+# removes every approval.
+approval_policy = "on-request"
+approvals_reviewer = "user"
+
+default_permissions = "dev"
+
+# Cached results come from an OpenAI-maintained index. Use "disabled" on native
+# Windows and for regulated repositories; never "live" for routine work.
+web_search = "cached"
+
+# Keep Codex and MCP credentials in the OS keyring, not in a file.
+cli_auth_credentials_store = "keyring"
+mcp_oauth_credentials_store = "keyring"
+
+# Commands don't start login shells, so ~/.bashrc, ~/.zprofile and the secrets
+# they often export aren't loaded.
+allow_login_shell = false
+
+[features]
+# Enforces the domain allow list below whenever a profile turns network on.
+network_proxy = true
+# Skills don't install and start MCP servers you haven't reviewed.
+skill_mcp_dependency_install = false
+
+[memories]
+# Content from web search or MCP tools can't become a lasting memory.
+disable_on_external_context = true
+
+[permissions.dev]
+description = "Edit the workspace; keep secrets unreadable; no network by default."
+extends = ":workspace"
+
+[permissions.dev.filesystem]
+"~/.ssh" = "deny"
+"~/.aws" = "deny"
+"~/.config/gcloud" = "deny"
+"~/.azure" = "deny"
+"~/.kube" = "deny"
+"~/.docker" = "deny"
+"~/.npmrc" = "deny"
+"~/.netrc" = "deny"
+# Bounds the glob scan for the workspace rules below on Linux, WSL and Windows.
+glob_scan_max_depth = 4
+
+[permissions.dev.filesystem.":workspace_roots"]
+"**/.env*" = "deny"
+"**/*.pem" = "deny"
+"**/*.key" = "deny"
+
+# Command network access stays off. When a task needs a package registry,
+# uncomment these lines; the proxy then allows only the listed hosts.
+# [permissions.dev.network]
+# enabled = true
+#
+# [permissions.dev.network.domains]
+# "registry.npmjs.org" = "allow"
+# "pypi.org" = "allow"
+# "files.pythonhosted.org" = "allow"

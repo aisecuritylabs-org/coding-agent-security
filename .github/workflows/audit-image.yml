@@ -1,0 +1,94 @@
+# Builds the claude-code-audit container in the open.
+#
+# - Every push and pull request: build the image, run the hook tests and the
+#   audit tests. Nothing is published.
+# - A version tag (v1.2.3): additionally publish the image to GitHub Container
+#   Registry with an SBOM, build provenance, and a signed GitHub attestation
+#   anyone can verify with:
+#     gh attestation verify oci://ghcr.io/aisecuritylabs-org/claude-code-audit:<tag> \
+#       --owner aisecuritylabs-org
+#
+# Every third-party action is pinned to a full commit SHA.
+
+name: audit-image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+    paths: ['claude-code/**', '.github/workflows/audit-image.yml']
+  pull_request:
+    paths: ['claude-code/**', '.github/workflows/audit-image.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/aisecuritylabs-org/claude-code-audit
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Hook test suite
+        run: bash claude-code/tests/test-hooks.sh
+
+      - name: Audit test suite (builds the image locally)
+        run: bash claude-code/audit/tests/test-audit.sh
+
+      - name: FRAMEWORK-MAPPING.md is up to date with mappings.json
+        run: |
+          node scripts/gen-mapping-doc.js
+          git diff --exit-code -- claude-code/audit/FRAMEWORK-MAPPING.md
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write        # push to ghcr.io
+      id-token: write        # sign the provenance attestation
+      attestations: write    # store the attestation on GitHub
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: claude-code
+          file: claude-code/audit/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: mode=max
+
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true

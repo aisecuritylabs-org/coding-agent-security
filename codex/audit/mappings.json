@@ -1,0 +1,1052 @@
+{
+  "about": "Why each OpenAI Codex audit check matters, mapped to AI security frameworks. Mappings are AISecurityLabs.org's interpretation and are not endorsed by the framework owners.",
+  "frameworks": {
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "items": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "version": "2026",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "items": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "mitre_atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.09",
+      "url": "https://atlas.mitre.org/",
+      "items": {
+        "AML.T0010": "AI Supply Chain Compromise",
+        "AML.T0010.005": "AI Supply Chain Compromise: AI Agent Tool",
+        "AML.T0011.002": "User Execution: Poisoned AI Agent Tool",
+        "AML.T0025": "Exfiltration via Cyber Means",
+        "AML.T0050": "Command and Scripting Interpreter",
+        "AML.T0051": "LLM Prompt Injection",
+        "AML.T0051.001": "LLM Prompt Injection: Indirect",
+        "AML.T0053": "AI Agent Tool Invocation",
+        "AML.T0055": "Unsecured Credentials",
+        "AML.T0057": "LLM Data Leakage",
+        "AML.T0074": "Masquerading",
+        "AML.T0080": "AI Agent Context Poisoning",
+        "AML.T0081": "Modify AI Agent Configuration",
+        "AML.T0083": "Credentials from AI Agent Configuration",
+        "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
+        "AML.T0098": "AI Agent Tool Credential Harvesting",
+        "AML.T0099": "AI Agent Tool Data Poisoning",
+        "AML.T0101": "Data Destruction via AI Agent Tool Invocation",
+        "AML.T0105": "Escape to Host",
+        "AML.T0109": "AI Supply Chain Rug Pull",
+        "AML.T0110": "AI Agent Tool Poisoning",
+        "AML.T0112.000": "Machine Compromise: Local AI Agent"
+      }
+    },
+    "nist_ai_rmf": {
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "url": "https://airc.nist.gov/airmf-resources/playbook/",
+      "items": {
+        "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+        "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+        "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components, including the use of third-party data or software, are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
+        "MEASURE 2.7": "AI system security and resilience, as identified in the MAP function, are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system, as identified in the MAP function, is examined and documented.",
+        "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+        "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+        "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
+      }
+    }
+  },
+  "checks": {
+    "I01": {
+      "why": "Security fixes for Codex itself ship in new releases: project config that ran on open (CVE-2025-61260), a sandbox writable-root bypass (CVE-2025-59532, fixed in 0.39.0) a PowerShell parsing bug that skipped approval (CVE-2026-19591, fixed in 0.131.0), and Plugin4Shell, where a plugin pinned by commit could be swapped on background auto-update (fixed in 0.146.0). Codex has no setting that enforces a minimum version, so updating is on you.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000",
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "AIR Security: Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        },
+        {
+          "title": "NVD: CVE-2026-19591",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19591"
+        },
+        {
+          "title": "OpenAI advisory GHSA-w5fx-fh39-j5rw (CVE-2025-59532)",
+          "url": "https://github.com/openai/codex/security/advisories/GHSA-w5fx-fh39-j5rw"
+        },
+        {
+          "title": "Check Point Research: Codex CLI command injection (CVE-2025-61260)",
+          "url": "https://research.checkpoint.com/2025/openai-codex-cli-command-injection-vulnerability/"
+        }
+      ]
+    },
+    "C00": {
+      "why": "Without your user configuration the audit cannot tell whether the sandbox, approvals and secret protection are set.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "C01": {
+      "why": "Codex defaults keep the workspace-write sandbox and network off, but nothing in the defaults keeps .env files or credential folders unreadable. An invalid config.toml is not loaded at all.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        },
+        {
+          "title": "Codex docs: Agent approvals and security",
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        }
+      ]
+    },
+    "C02": {
+      "why": "Full access removes the operating-system sandbox, so a single successful prompt injection can read any file, write anywhere and reach any host your account can. OpenAI advises keeping it to disposable, isolated environments.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0050",
+        "AML.T0053",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Sandboxing",
+          "url": "https://learn.chatgpt.com/docs/sandboxing"
+        },
+        {
+          "title": "Codex docs: Agent approvals and security",
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        }
+      ]
+    },
+    "C03": {
+      "why": "Approvals are the check before an action leaves the sandbox. \"never\" runs everything unattended; \"untrusted\" was retired in Codex 0.149.0 and an explicit setting can stop the client from starting; \"on-failure\" is deprecated.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Agent approvals and security",
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        },
+        {
+          "title": "openai/codex PR #39630: Retire the untrusted approval policy",
+          "url": "https://github.com/openai/codex/pull/39630"
+        }
+      ]
+    },
+    "C04": {
+      "why": "With command network access on and no proxy, every command and subprocess can reach any host, which gives an injected command a direct path to upload code and secrets. The proxy allows traffic by hostname, so paste sites and webhook services on the allow list are exfiltration channels too.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Agent approvals and security",
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        },
+        {
+          "title": "Codex docs: Permission profiles",
+          "url": "https://learn.chatgpt.com/docs/permissions"
+        }
+      ]
+    },
+    "C05": {
+      "why": "Web pages reach the model as input. Live search fetches them unfiltered, and on native Windows Cymulate chained web content with a PATH hijack to run code outside the sandbox; OpenAI closed the report as not reproducible.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Web search",
+          "url": "https://learn.chatgpt.com/docs/web-search"
+        },
+        {
+          "title": "Cymulate: Codex CLI RCE via web search on Windows",
+          "url": "https://cymulate.com/blog/codex-cli-rce-prompt-injection-mitigations/"
+        }
+      ]
+    },
+    "C06": {
+      "why": "The workspace-write sandbox limits writes, not reads: the agent can read files anywhere your account can. .env files, SSH keys and cloud credentials read into the context can be leaked onward. Only a permission profile lets you deny reads from your own config.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055",
+        "AML.T0057"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Permission profiles",
+          "url": "https://learn.chatgpt.com/docs/permissions"
+        },
+        {
+          "title": "Codex docs: Sandboxing",
+          "url": "https://learn.chatgpt.com/docs/sandboxing"
+        }
+      ]
+    },
+    "C07": {
+      "why": "Credentials in a plain file can be read by any process running as you, including a hijacked agent command. The OS keyring keeps them out of the filesystem.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        },
+        {
+          "title": "Codex docs: Authentication",
+          "url": "https://learn.chatgpt.com/docs/auth"
+        }
+      ]
+    },
+    "C08": {
+      "why": "A login shell loads ~/.bashrc, ~/.zprofile and similar files, which often export API keys and tokens into every command the agent runs.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0083",
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "C09": {
+      "why": "The auto-review agent approves boundary-crossing actions for you. OpenAI says it \"can still make mistakes\", and PromptArmor showed a hidden instruction in a GitHub issue getting it to approve a malicious npm install.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Auto-review",
+          "url": "https://learn.chatgpt.com/docs/sandboxing/auto-review"
+        },
+        {
+          "title": "PromptArmor: Codex auto-review agent runs malware",
+          "url": "https://www.promptarmor.com/resources/agentic-auto-review-approves-malware"
+        }
+      ]
+    },
+    "C10": {
+      "why": "Skills can install and start the MCP servers they depend on. With the default setting on, a skill can bring in third-party code you never reviewed.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "C11": {
+      "why": "Memories carry context into later sessions. If web search or MCP output can create them, injected instructions can persist long after the page or ticket that carried them.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0080",
+        "AML.T0051.001"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Memories",
+          "url": "https://learn.chatgpt.com/docs/customization/memories"
+        },
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "C12": {
+      "why": "notify runs a command after every turn. Whoever controls it runs code on your machine repeatedly, outside any approval.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "C13": {
+      "why": "Hooks are shell commands that run on agent events with your privileges. Codex asks you to trust each hook before it runs, but a hook that downloads code runs whatever the server sends that day.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Hooks",
+          "url": "https://learn.chatgpt.com/docs/hooks"
+        }
+      ]
+    },
+    "C14": {
+      "why": "Secrets written into an MCP server env block sit in plain text in config.toml, where anything that can read the file (including a hijacked agent command) can take them.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055",
+        "AML.T0083"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        },
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "M01": {
+      "why": "User-level MCP servers load in every project. Knowing which ones you run and where they came from is the first step in managing third-party risk.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        }
+      ]
+    },
+    "M02": {
+      "why": "Error trackers, tickets, chat and email carry text written by outsiders, and it reaches the model as tool output. Agentjacking planted fake Sentry errors with \"fix\" instructions that hijacked Claude Code, Cursor and Codex.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        }
+      ]
+    },
+    "M03": {
+      "why": "An unpinned MCP server runs whatever version its registry serves at start-up, so a compromised release reaches you automatically.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        }
+      ]
+    },
+    "R01": {
+      "why": "Command rules let Codex ask before, or refuse, commands such as git push and recursive deletes, independent of how the model phrases the request. In issue #42875 a developer reported about 221 GB deleted from their home directory while auto-approved Codex sessions were running; the cause is unconfirmed.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0101",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Rules",
+          "url": "https://learn.chatgpt.com/docs/agent-configuration/rules"
+        },
+        {
+          "title": "openai/codex issue #42875: ~221 GB deleted during auto-approved sessions",
+          "url": "https://github.com/openai/codex/issues/42875"
+        }
+      ]
+    },
+    "R02": {
+      "why": "An allow rule runs matching commands outside the sandbox without asking. Allowing shells, deletes, network tools or package managers hands a hijacked session a way around every other control. A prefix_rule without a decision is an allow rule.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0053",
+        "AML.T0101",
+        "AML.T0050"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Rules",
+          "url": "https://learn.chatgpt.com/docs/agent-configuration/rules"
+        }
+      ]
+    },
+    "Q01": {
+      "why": "Managed requirements are the only settings users cannot weaken. Knowing which ones apply tells you what is enforced and what is only a default.",
+      "owasp_llm": [],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "GOVERN 1.4",
+        "GOVERN 1.6"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Managed configuration",
+          "url": "https://learn.chatgpt.com/docs/enterprise/managed-configuration"
+        }
+      ]
+    },
+    "W01": {
+      "why": "Codex on Windows loads C:\\ProgramData\\OpenAI\\Codex\\config.toml as machine-wide defaults. Cymulate reported that the folder is not created or locked by default, so one standard user can plant settings, such as a notify command or a disabled sandbox, for every Codex user on the machine. OpenAI had not committed to a fix at publication.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI03",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cymulate: world-writable ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        }
+      ]
+    },
+    "W02": {
+      "why": "The machine-wide config.toml applies to every Codex user on this computer. Settings there that run commands or weaken the sandbox affect everyone and should only ever come from your administrators.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI03",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cymulate: world-writable ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        }
+      ]
+    },
+    "P00": {
+      "why": "Without a project the audit cannot check repository files that Codex loads on trust.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "P01": {
+      "why": "Codex loads a project .codex/config.toml only after you trust the project, but then it applies to every session there. Read it before you trust the folder.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1",
+        "GOVERN 6.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        },
+        {
+          "title": "Codex docs: Agent approvals and security",
+          "url": "https://learn.chatgpt.com/docs/agent-approvals-security"
+        }
+      ]
+    },
+    "P02": {
+      "why": "A repository that lowers the sandbox, turns approvals off or opens the network turns any later prompt injection into code execution on your machine.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Configuration reference",
+          "url": "https://learn.chatgpt.com/docs/config-file/config-reference"
+        }
+      ]
+    },
+    "P03": {
+      "why": "MCP servers declared by a repository start as local processes once you trust the project. Check Point showed project MCP entries executing on open in older Codex versions (CVE-2025-61260), and the same pattern recurs across coding agents.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Check Point Research: Codex CLI command injection (CVE-2025-61260)",
+          "url": "https://research.checkpoint.com/2025/openai-codex-cli-command-injection-vulnerability/"
+        },
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        }
+      ]
+    },
+    "P04": {
+      "why": "Codex reads a .env file and, before the fix for CVE-2025-61260, a project .env could set CODEX_HOME to a folder inside the repository so that its config and MCP servers ran on open. A project .env setting CODEX_* variables has no good reason to exist.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Check Point Research: Codex CLI command injection (CVE-2025-61260)",
+          "url": "https://research.checkpoint.com/2025/openai-codex-cli-command-injection-vulnerability/"
+        },
+        {
+          "title": "GitHub Advisory GHSA-xrxf-jgv3-qmrm (CVE-2025-61260)",
+          "url": "https://github.com/advisories/GHSA-xrxf-jgv3-qmrm"
+        },
+        {
+          "title": "Codex docs: Environment variables",
+          "url": "https://learn.chatgpt.com/docs/config-file/environment-variables"
+        }
+      ]
+    },
+    "P05": {
+      "why": "Project hooks run with your privileges once you trust the project and each hook. Hooks that fire when a session starts or a prompt is sent need no action from the agent: in June 2026 the Miasma worm used exactly that pattern against Claude Code.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MAP 4.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Hooks",
+          "url": "https://learn.chatgpt.com/docs/hooks"
+        },
+        {
+          "title": "StepSecurity: Miasma worm (Jun 2026)",
+          "url": "https://www.stepsecurity.io/blog/miasma-worm-hits-microsoft-again-azure-functions-action-and-72-other-repositories-disabled-after-supply-chain-attack-targeting-ai-coding-agents"
+        }
+      ]
+    },
+    "P06": {
+      "why": "Rules shipped by a repository load once the project is trusted. An allow rule there lets matching commands run outside the sandbox without asking.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Rules",
+          "url": "https://learn.chatgpt.com/docs/agent-configuration/rules"
+        }
+      ]
+    },
+    "P07": {
+      "why": "AGENTS.md is loaded into every session as instructions. A repository can use it for persistent prompt injection, telling the agent to download and run code.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: AGENTS.md",
+          "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+        }
+      ]
+    },
+    "P08": {
+      "why": "Error trackers, tickets, chat and email carry text written by outsiders. A project that wires such servers into the agent gives outsiders a way to send it instructions.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "Codex docs: MCP",
+          "url": "https://learn.chatgpt.com/docs/extend/mcp"
+        }
+      ]
+    },
+    "P09": {
+      "why": "AGENTS.md rules (secrets from environment variables, no eval, ask before external calls) shape the code the agent writes. They are guidance, not enforcement.",
+      "owasp_llm": [
+        "LLM05"
+      ],
+      "owasp_agentic": [
+        "ASI05"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: AGENTS.md",
+          "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+        }
+      ]
+    },
+    "P10": {
+      "why": ".env files hold API keys and connection strings. If they are not ignored by git, one \"commit everything\" publishes them.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Permission profiles",
+          "url": "https://learn.chatgpt.com/docs/permissions"
+        }
+      ]
+    },
+    "P11": {
+      "why": "A link with an innocent name can point at agent configuration or shell startup files. Researchers showed approval prompts displaying the harmless name while the write landed on the real target (Adversa AI, SymJack, in six coding agents).",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0074",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI: SymJack (May 2026)",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        }
+      ]
+    },
+    "P12": {
+      "why": "Git settings such as core.hooksPath, core.fsmonitor and filter drivers run programs during ordinary git commands. CVE-2026-19590, -19592 and -19593 showed Codex running them from a repository delivered with its .git/config intact; a normal git clone never copies .git/config.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "NVD: CVE-2026-19590",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19590"
+        },
+        {
+          "title": "NVD: CVE-2026-19592",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19592"
+        },
+        {
+          "title": "NVD: CVE-2026-19593",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19593"
+        }
+      ]
+    },
+    "S01": {
+      "why": "A shell alias that adds --yolo, --dangerously-bypass-approvals-and-sandbox or --dangerously-bypass-hook-trust silently removes the sandbox, approvals or hook review from every session you start.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Codex docs: Sandboxing",
+          "url": "https://learn.chatgpt.com/docs/sandboxing"
+        },
+        {
+          "title": "Codex docs: Hooks",
+          "url": "https://learn.chatgpt.com/docs/hooks"
+        }
+      ]
+    }
+  }
+}

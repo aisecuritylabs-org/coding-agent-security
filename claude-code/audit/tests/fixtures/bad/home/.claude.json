@@ -1,0 +1,1 @@
+{"mcpServers":{"prod-db":{"command":"db-mcp"},"jira":{"command":"npx","args":["-y","@acme/jira-mcp@2.1.0"]}}}
