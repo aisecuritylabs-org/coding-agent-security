@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude Code security audit — read-only, offline.
+# Claude Code security audit: read-only, offline.
 #
 # Checks a developer's Claude Code configuration against the checklist in
 # claude-code/07-checklist.md and prints PASS / WARN / FAIL / INFO results.
@@ -66,7 +66,7 @@ case "$FORMAT" in
   *) echo "unknown format '$FORMAT' (use text, report, json, csv or html)" >&2; exit 2 ;;
 esac
 
-# guide_page <step> — the guide page that explains a step
+# guide_page <step>: the guide page that explains a step
 guide_page() {
   case "$1" in
     1) echo "01-before-you-start.md" ;;
@@ -79,7 +79,7 @@ guide_page() {
   esac
 }
 
-# fix_for <id> — how to fix a WARN / FAIL result, as concrete as possible.
+# fix_for <id>: how to fix a WARN / FAIL result, as concrete as possible.
 # JSON snippets go in ~/.claude/settings.json unless stated otherwise.
 fix_for() {
   case "$1" in
@@ -97,7 +97,7 @@ fix_for() {
     U06) echo 'Add to ~/.claude/settings.json: { "sandbox": { "credentials": { "files": [ { "path": "~/.ssh", "mode": "deny" }, { "path": "~/.aws/credentials", "mode": "deny" } ] } } }' ;;
     U07) echo 'Add to ~/.claude/settings.json: { "permissions": { "deny": [ "Read(./.env)", "Read(./.env.*)", "Read(./secrets/**)" ] } }' ;;
     U08) echo 'Add to ~/.claude/settings.json: { "permissions": { "deny": [ "Bash(curl *)", "Bash(wget *)" ] } }' ;;
-    U09) echo 'Remove the listed rules from "permissions.allow". Check ~/.claude/settings.json and the project'"'"'s .claude/settings.local.json — answering "always allow" in a session saves rules there. Move push, publish and deploy commands to "permissions.ask" instead.' ;;
+    U09) echo 'Remove the listed rules from "permissions.allow". Check ~/.claude/settings.json and the project'"'"'s .claude/settings.local.json; answering "always allow" in a session saves rules there. Move push, publish and deploy commands to "permissions.ask" instead.' ;;
     U10) echo 'Add to ~/.claude/settings.json: { "permissions": { "ask": [ "Bash(git push *)" ] } }' ;;
     U11) echo 'Delete "enableAllProjectMcpServers". Enable servers you trust by name instead: { "enabledMcpjsonServers": ["server-name"] }' ;;
     U12) echo 'Remove "permissions.additionalDirectories", or limit it to folders this project genuinely needs. Never add your home directory.' ;;
@@ -148,7 +148,7 @@ record() {
     '{status:$s, id:$i, guide_step:$g, title:$t, detail:$d, fix:$f, guide_url:$u}')")
 }
 
-# q <file> <jq-filter> — run a jq filter, empty output on any error
+# q <file> <jq-filter>: run a jq filter, empty output on any error
 q() { [ -f "$1" ] && jq -r "$2" "$1" 2>/dev/null; }
 
 valid_json() { [ -f "$1" ] && jq empty "$1" >/dev/null 2>&1; }
@@ -252,16 +252,16 @@ else
 
   days=$(q "$S" '.cleanupPeriodDays // empty')
   if [ -z "$days" ]; then
-    record WARN U14 2 "cleanupPeriodDays is not set" "Transcripts keep code and secrets. Set 7–14 days."
+    record WARN U14 2 "cleanupPeriodDays is not set" "Transcripts keep code and secrets. Set 7 to 14 days."
   elif [ "$days" -gt 30 ] 2>/dev/null; then
-    record WARN U14 2 "Transcripts are kept for $days days" "Set cleanupPeriodDays to 7–14."
+    record WARN U14 2 "Transcripts are kept for $days days" "Set cleanupPeriodDays to 7 to 14."
   else
     record PASS U14 2 "Transcripts are cleaned up after $days days"
   fi
 
   secret_env=$(q "$S" '.env // {} | keys[]' | grep -Ei 'key|token|secret|password|credential' || true)
   if [ -n "$secret_env" ]; then
-    record FAIL U15 2 "Secrets set in the settings env block" "$(echo $secret_env) — every session and subprocess receives these."
+    record FAIL U15 2 "Secrets set in the settings env block" "$(echo $secret_env): every session and subprocess receives these."
   fi
 
   if q "$S" '.sandbox.network.allowUnixSockets // [] | .[]' | grep -q 'docker.sock'; then
@@ -361,7 +361,7 @@ if [ -d "$PROJECT" ] && [ -n "$(ls -A "$PROJECT" 2>/dev/null)" ]; then
     [ -n "$remote" ] && record FAIL P03 4 "$rel has a hook that downloads or runs remote code" "$remote"
     [ -n "$known" ]  && record INFO P03 4 "$rel registers this guide's hooks" "$known"
     [ -n "$remote" ] && other=$(grep -Fvx -f <(printf '%s\n' "$remote") <<<"$other" || true)
-    [ -n "$other" ]  && record WARN P03 4 "$rel runs hook commands — confirm you wrote or reviewed each one" "$other"
+    [ -n "$other" ]  && record WARN P03 4 "$rel runs hook commands; confirm you wrote or reviewed each one" "$other"
 
     # Hooks that fire on their own when a session starts: the Miasma worm's trigger.
     auto=$(q "$f" '[(.hooks.SessionStart // []), (.hooks.Setup // [])] | add | .[]? | .hooks[]?.command')
@@ -435,7 +435,7 @@ fi
 if valid_json "$CLAUDE_JSON"; then
   servers=$(q "$CLAUDE_JSON" '[(.mcpServers // {} | keys[]), (.projects // {} | .[] | .mcpServers // {} | keys[])] | unique | .[]')
   if [ -n "$servers" ]; then
-    record INFO M01 4 "MCP servers configured for your user" "$(echo $servers) — confirm each is approved and pinned."
+    record INFO M01 4 "MCP servers configured for your user" "$(echo $servers): confirm each is approved and pinned."
   else
     record PASS M01 4 "No user-level MCP servers configured"
   fi
@@ -501,7 +501,7 @@ case "$FORMAT" in
 
   text)
     echo "Claude Code security audit v$AUDIT_VERSION (read-only, offline)"
-    echo "Guide: claude-code/README.md — step numbers shown in [brackets]"
+    echo "Guide: claude-code/README.md, step numbers shown in [brackets]"
     echo
     for r in "${results[@]}"; do
       # Multi-line details (lists of rules, hooks, ...) print one item per line.
@@ -536,7 +536,7 @@ case "$FORMAT" in
             ( .value.frameworks // {} | to_entries[] | select(.value | length > 0)
               | "     \({owasp_llm: "OWASP LLM:", owasp_agentic: "OWASP Agentic:", mitre_atlas: "MITRE ATLAS:", nist_ai_rmf: "NIST AI RMF:"}[.key] | . + "       " | .[0:15]) \(.value | map("\(.id) \(if (.id | startswith("GOVERN") or startswith("MAP") or startswith("MEASURE") or startswith("MANAGE")) then "" else .title end)" | rtrimstr(" ")) | join("; "))" ),
             "     Guide:   \(.value.guide_url)",
-            ( (.value.sources // [])[] | "     Source:  \(.title) — \(.url)" ) )
+            ( (.value.sources // [])[] | "     Source:  \(.title): \(.url)" ) )
           end ),
       ( if (.coverage // null) != null then
           "",
@@ -547,7 +547,7 @@ case "$FORMAT" in
             "",
             "\($fw[.key].name) (\($fw[.key].version))",
             ( if (.value | length) == 0 then "  none" else
-              ( .value[] | "  \(.id) \(.title | if length > 70 then .[0:67] + "..." else . end)  —  \(.fail) FAIL, \(.warn) WARN  [\(.checks | join(", "))]" ) end ) )
+              ( .value[] | "  \(.id) \(.title | if length > 70 then .[0:67] + "..." else . end): \(.fail) FAIL, \(.warn) WARN  [\(.checks | join(", "))]" ) end ) )
         else empty end ),
       "",
       "PASSED AND INFORMATIONAL",
@@ -579,7 +579,7 @@ case "$FORMAT" in
       def badge: "<span class=\"b \(. | ascii_downcase)\">\(.)</span>";
       "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">",
       "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
-      "<title>Claude Code security audit — \(.project | @html)</title>",
+      "<title>Claude Code security audit: \(.project | @html)</title>",
       "<style>",
       "body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;color:#0d0d0d;background:#faf7f0;line-height:1.55}",
       "h1{margin:0 0 .25rem}h2{margin-top:2.5rem;border-bottom:1px solid #d9d0c0;padding-bottom:.3rem}",

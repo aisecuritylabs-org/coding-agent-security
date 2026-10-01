@@ -40,11 +40,11 @@ The number in brackets is the guide step that explains the fix.
 
 ## Requirements
 
-Docker Desktop, Docker Engine or Podman. Nothing else — no new software on your machine.
+Docker Desktop, Docker Engine or Podman. Nothing else: no new software on your machine.
 
 ## Run it
 
-### Option A — build it yourself from source (recommended)
+### Option A: build it yourself from source (recommended)
 
 Building from this repository means you run exactly the code you can read.
 
@@ -56,7 +56,7 @@ cd ~/code/my-app
 bash ~/coding-agent-security/claude-code/audit/run.sh
 ```
 
-Windows (Docker Desktop) — works in both Command Prompt and PowerShell:
+Windows (Docker Desktop), which works in both Command Prompt and PowerShell:
 
 ```bat
 git clone https://github.com/aisecuritylabs-org/coding-agent-security.git "%USERPROFILE%\coding-agent-security"
@@ -78,12 +78,12 @@ Save a report with how-to-fix steps? [h]tml, [t]ext, [c]sv, [j]son, [n]o (defaul
 
 | Format | Best for |
 | --- | --- |
-| **HTML** | Reading and sharing: every finding as a card with *Why it matters*, *Details*, *How to fix* (the exact setting to add), its *Risk mapping* and a link to the guide — plus a *Framework coverage* summary. Self-contained — no scripts, no external resources. |
+| **HTML** | Reading and sharing: every finding as a card with *Why it matters*, *Details*, *How to fix* (the exact setting to add), its *Risk mapping* and a link to the guide, plus a *Framework coverage* summary. Self-contained: no scripts, no external resources. |
 | **Text** | Email, tickets, or reading in any editor. Same content, most serious first. |
 | **CSV** | Tracking fixes across a team in Excel or Google Sheets: one row per check with why, fix, framework columns and guide link. |
 | **JSON** | Scripts and CI. |
 
-Reports are saved to a `claude-code-audit-reports` folder in your home directory — never inside the project, so they can't be committed by accident. The file name includes the project and a timestamp.
+Reports are saved to a `claude-code-audit-reports` folder in your home directory, never inside the project, so they can't be committed by accident. The file name includes the project and a timestamp.
 
 To skip the question:
 
@@ -97,7 +97,7 @@ On Windows: `-Report html`, `-NoReport`, `-ReportDir <folder>`.
 
 The container only prints the report; the launcher script saves it on your machine. The container is never given write access to anything.
 
-### Option B — use the published image
+### Option B: use the published image
 
 ```bash
 # Verify it was built by this repository's workflow before running it
@@ -130,15 +130,15 @@ docker run --rm --network none --read-only --cap-drop ALL \
 | **FAIL** | A setting that removes a protection or grants dangerous access. Fix before your next session. |
 | **WARN** | A recommended control is missing, or something needs your review. |
 | **PASS** | The control is in place. |
-| **INFO** | Context — nothing to fix. |
+| **INFO** | Context only; nothing to fix. |
 
 The exit code is `0` when there are no FAIL results and `1` otherwise, so you can use it in a script or CI job.
 
-The audit reads configuration. It does not prove the controls work in a live session — for that, run the [self-test](../06-self-test.md).
+The audit reads configuration. It does not prove the controls work in a live session; for that, run the [self-test](../06-self-test.md).
 
 ## Why it matters, and framework mapping
 
-Every WARN and FAIL in a saved report explains **why it matters** — the risk the control protects against — and maps the finding to four AI security frameworks:
+Every WARN and FAIL in a saved report explains **why it matters** (the risk the control protects against) and maps the finding to four AI security frameworks:
 
 | Framework | Version | What the mapping tells you |
 | --- | --- | --- |
@@ -147,7 +147,7 @@ Every WARN and FAIL in a saved report explains **why it matters** — the risk t
 | [MITRE ATLAS](https://atlas.mitre.org/) | 2026.09 | Which adversary technique the gap enables (e.g. AML.T0086 Exfiltration via AI Agent Tool Invocation) |
 | [NIST AI RMF](https://airc.nist.gov/airmf-resources/playbook/) | 1.0 | Which risk-management outcome the control supports (e.g. MEASURE 2.7) |
 
-Reports end with a **framework coverage** summary — every OWASP risk, ATLAS technique and NIST subcategory your findings relate to, with FAIL / WARN counts — ready to paste into a risk register.
+Reports end with a **framework coverage** summary: every OWASP risk, ATLAS technique and NIST subcategory your findings relate to, with FAIL / WARN counts, ready to paste into a risk register.
 
 The full table for all checks is in **[FRAMEWORK-MAPPING.md](FRAMEWORK-MAPPING.md)**. The mappings live in [`mappings.json`](mappings.json); every ATLAS ID and name was verified against MITRE's ATLAS 2026.09 data, and the NIST statements are quoted from the AI RMF Playbook. They are AISecurityLabs.org's interpretation and are not endorsed by the framework owners.
 
@@ -160,7 +160,7 @@ Each check has a stable ID (shown in `--json` output). The step column links to 
 | I01 | Claude Code version supports every baseline setting (v2.1.219+) | PASS · WARN · INFO | [1](../01-before-you-start.md) |
 | U00 | `~/.claude` was available to the audit | WARN | [2](../02-sandbox-and-permissions.md) |
 | U01 | `~/.claude/settings.json` exists and is valid JSON | PASS · FAIL | [2](../02-sandbox-and-permissions.md) |
-| U02 | Sandbox enabled (and supported — native Windows has none) | PASS · WARN · FAIL | [2](../02-sandbox-and-permissions.md) |
+| U02 | Sandbox enabled (and supported: native Windows has none) | PASS · WARN · FAIL | [2](../02-sandbox-and-permissions.md) |
 | U03 | Strict sandbox mode: `allowUnsandboxedCommands: false` | PASS · WARN · FAIL | [2](../02-sandbox-and-permissions.md) |
 | U04 | `sandbox.network.strictAllowlist: true` | PASS · WARN | [2](../02-sandbox-and-permissions.md) |
 | U05 | Network allowlist has no wildcard or exfiltration-prone domains | PASS · WARN · INFO | [2](../02-sandbox-and-permissions.md) |
@@ -172,7 +172,7 @@ Each check has a stable ID (shown in `--json` output). The step column links to 
 | U11 | `enableAllProjectMcpServers` is not `true` | FAIL | [2](../02-sandbox-and-permissions.md) |
 | U12 | `additionalDirectories` does not widen the write boundary | WARN | [2](../02-sandbox-and-permissions.md) |
 | U13 | Default permission mode is not `bypassPermissions` | FAIL | [2](../02-sandbox-and-permissions.md) |
-| U14 | Transcripts cleaned up within 30 days (7–14 recommended) | PASS · WARN | [2](../02-sandbox-and-permissions.md) |
+| U14 | Transcripts cleaned up within 30 days (7 to 14 recommended) | PASS · WARN | [2](../02-sandbox-and-permissions.md) |
 | U15 | No secrets in the settings `env` block | FAIL | [2](../02-sandbox-and-permissions.md) |
 | U16 | Docker socket not allowed into the sandbox | FAIL | [2](../02-sandbox-and-permissions.md) |
 | U17 | Plugin marketplaces are not fetched from git hosts outside GitHub (Plugin4Shell) | WARN | [4](../04-mcp-plugins-and-repos.md) |
@@ -191,7 +191,7 @@ Each check has a stable ID (shown in `--json` output). The step column links to 
 | P09 | Project hooks that run automatically when a session starts (the Miasma worm's trigger) | WARN | [4](../04-mcp-plugins-and-repos.md) |
 | P10 | Project MCP servers that start as local processes once the folder is trusted (TrustFall) | WARN | [4](../04-mcp-plugins-and-repos.md) |
 | P11 | Symlinks pointing at agent config or dotfiles (FAIL) or out of the project (WARN) (SymJack) | FAIL · WARN | [4](../04-mcp-plugins-and-repos.md) |
-| P12 | Project MCP servers that read content outsiders can write — errors, tickets, chat, email (Agentjacking) | WARN | [4](../04-mcp-plugins-and-repos.md) |
+| P12 | Project MCP servers that read content outsiders can write, such as errors, tickets, chat and email (Agentjacking) | WARN | [4](../04-mcp-plugins-and-repos.md) |
 | P13 | Project plugin marketplaces fetched from git hosts outside GitHub (Plugin4Shell) | WARN | [4](../04-mcp-plugins-and-repos.md) |
 | M01 | MCP servers configured for your user | PASS · INFO | [4](../04-mcp-plugins-and-repos.md) |
 | M02 | Your MCP servers that read content outsiders can write (Agentjacking) | WARN | [4](../04-mcp-plugins-and-repos.md) |

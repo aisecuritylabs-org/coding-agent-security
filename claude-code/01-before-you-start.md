@@ -1,12 +1,12 @@
-# Step 1 — Before you start
+# Step 1: Before you start
 
-[← Overview](README.md) · Next: [Step 2 — Sandbox and permissions →](02-sandbox-and-permissions.md)
+[← Overview](README.md) · Next: [Step 2: Sandbox and permissions →](02-sandbox-and-permissions.md)
 
 **Goal:** a current Claude Code install, running under the right account and OS user, with the sandbox's dependencies in place.
 
 ## 1.1 Update Claude Code and check its health
 
-Several published vulnerabilities have been in the tool itself rather than the model — configuration that ran before the trust dialog, sandbox escapes, network-allowlist bypasses — and they were fixed in later releases. Treat Claude Code like a browser: keep it current.
+Several published vulnerabilities have been in the tool itself rather than the model (configuration that ran before the trust dialog, sandbox escapes, network-allowlist bypasses), and they were fixed in later releases. Treat Claude Code like a browser: keep it current.
 
 ```bash
 claude update
@@ -28,9 +28,9 @@ Every subprocess Claude Code spawns inherits your privileges. Run your daily wor
 **Check:**
 
 ```bash
-# Linux / WSL2 / macOS — should NOT print 0
+# Linux / WSL2 / macOS: should NOT print 0
 id -u
-# macOS — your user should not be listed if you want a standard account
+# macOS: your user should not be listed if you want a standard account
 dscl . -read /Groups/admin GroupMembership
 ```
 
@@ -91,4 +91,4 @@ brew install jq              # macOS
 - [ ] `/sandbox` shows no missing dependencies
 - [ ] `jq --version` works
 
-Next: [Step 2 — Sandbox and permissions →](02-sandbox-and-permissions.md)
+Next: [Step 2: Sandbox and permissions →](02-sandbox-and-permissions.md)

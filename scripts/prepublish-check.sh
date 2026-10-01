@@ -31,7 +31,7 @@ if [ -f .publish-blocklist ]; then
   done < .publish-blocklist
   if [ -n "$hits" ]; then fail "blocklisted terms found:"; printf '%s' "$hits"; else ok "no blocklisted terms"; fi
 else
-  fail ".publish-blocklist missing — create it (one private term per line)"
+  fail ".publish-blocklist missing; create it (one private term per line)"
 fi
 
 # 2. File types that should never be published
@@ -43,7 +43,7 @@ if command -v gitleaks >/dev/null; then
   if gitleaks detect --no-banner --redact -q >/dev/null 2>&1 && gitleaks protect --staged --no-banner --redact -q >/dev/null 2>&1; then
     ok "gitleaks found no secrets"
   else
-    fail "gitleaks reported possible secrets — run: gitleaks detect --redact -v"
+    fail "gitleaks reported possible secrets; run: gitleaks detect --redact -v"
   fi
 else
   echo "skip  gitleaks not installed (recommended)"

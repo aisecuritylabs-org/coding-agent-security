@@ -1,4 +1,4 @@
-# Local-only files — never committed
+# Local-only files, never committed
 .publish-blocklist
 drafts/
 *.docx

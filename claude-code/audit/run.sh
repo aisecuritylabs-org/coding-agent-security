@@ -78,7 +78,7 @@ add "$HOME/.claude.json"          /audit/claude.json
 for rc in .bashrc .zshrc .profile .bash_profile .bash_aliases .zprofile; do
   add "$HOME/$rc" "/audit/rc/$rc"
 done
-# The current directory is audited as the project — but never your whole home.
+# The current directory is audited as the project, but never your whole home.
 project_name=""
 if [ "$PWD" = "$HOME" ] || [ "$PWD" = "/" ]; then
   echo "Not mounting $PWD as the project. Run this from a project directory." >&2
@@ -89,7 +89,7 @@ fi
 
 version="$(claude --version 2>/dev/null || true)"
 
-audit() { # audit <format> — run the container once and print that format
+audit() { # audit <format>: run the container once and print that format
   "$ENGINE" run --rm \
     --network none \
     --read-only \

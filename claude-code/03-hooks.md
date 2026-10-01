@@ -1,8 +1,8 @@
-# Step 3 — Hooks
+# Step 3: Hooks
 
-[← Step 2](02-sandbox-and-permissions.md) · Next: [Step 4 — MCP servers, plugins and repositories →](04-mcp-plugins-and-repos.md)
+[← Step 2](02-sandbox-and-permissions.md) · Next: [Step 4: MCP servers, plugins and repositories →](04-mcp-plugins-and-repos.md)
 
-**Goal:** two `PreToolUse` hooks that block dangerous actions deterministically — no prompt, no override, nothing for a tired developer to click through.
+**Goal:** two `PreToolUse` hooks that block dangerous actions deterministically: no prompt, no override, nothing for a tired developer to click through.
 
 ## How a PreToolUse hook works
 
@@ -102,7 +102,7 @@ After every change, add a matching case to `tests/test-hooks.sh` and re-run it.
 
 ## A note on limits
 
-Hooks are pattern-matching scripts: **guardrails, not walls**. A determined prompt injection can look for a phrasing the patterns miss. They raise the floor from zero; the sandbox from step 2 is what holds underneath them. Hooks are also shell code that runs with your privileges — review any hook you did not write, including hooks shipped inside plugins.
+Hooks are pattern-matching scripts: **guardrails, not walls**. A determined prompt injection can look for a phrasing the patterns miss. They raise the floor from zero; the sandbox from step 2 is what holds underneath them. Hooks are also shell code that runs with your privileges, so review any hook you did not write, including hooks shipped inside plugins.
 
 ## Done when
 
@@ -111,4 +111,4 @@ Hooks are pattern-matching scripts: **guardrails, not walls**. A determined prom
 - [ ] `test-hooks.sh` reports 0 failures
 - [ ] `/hooks` lists both
 
-Next: [Step 4 — MCP servers, plugins and repositories →](04-mcp-plugins-and-repos.md)
+Next: [Step 4: MCP servers, plugins and repositories →](04-mcp-plugins-and-repos.md)

@@ -1,10 +1,10 @@
-# Step 7 — Checklist
+# Step 7: Checklist
 
 [← Step 6](06-self-test.md) · [Back to overview](README.md)
 
 Re-check this list after every Claude Code upgrade and whenever you set up a new machine.
 
-**Most of this list is checked automatically by the [audit container](audit/README.md).** Run it first. The items it can't see from configuration — your habits, and whether the controls work in a live session — are marked *manual* below.
+**Most of this list is checked automatically by the [audit container](audit/README.md).** Run it first. The items it can't see from configuration (your habits, and whether the controls work in a live session) are marked *manual* below.
 
 ## Installation and identity
 
@@ -58,4 +58,4 @@ Re-check this list after every Claude Code upgrade and whenever you set up a new
 ## References
 
 - Claude Code docs: [Security](https://code.claude.com/docs/en/security.md) · [Permissions](https://code.claude.com/docs/en/permissions.md) · [Sandboxing](https://code.claude.com/docs/en/sandboxing.md) · [Hooks guide](https://code.claude.com/docs/en/hooks-guide.md) · [Dev containers](https://code.claude.com/docs/en/devcontainer.md) · [Settings reference](https://code.claude.com/docs/en/settings-reference.md)
-- Trail of Bits: [claude-code-config](https://github.com/trailofbits/claude-code-config) — a reference hardened configuration
+- Trail of Bits: [claude-code-config](https://github.com/trailofbits/claude-code-config), a reference hardened configuration

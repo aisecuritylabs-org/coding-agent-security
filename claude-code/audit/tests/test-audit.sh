@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds the audit image and runs it against two fixtures:
-#   good/ — the guide's hardened baseline: expect exit 0 and no FAIL
-#   bad/  — a deliberately insecure setup: expect exit 1 and every FAIL below
+#   good/: the guide's hardened baseline: expect exit 0 and no FAIL
+#   bad/:  a deliberately insecure setup: expect exit 1 and every FAIL below
 #
 # Usage (from the repository root):  bash claude-code/audit/tests/test-audit.sh
 # Set AUDIT_IMAGE to test an existing image instead of building one.

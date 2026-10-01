@@ -1,12 +1,12 @@
 # Securing Claude Code, step by step
 
-Claude Code runs in your terminal with your permissions. Left unconfigured, it can read any file your user account can read (including `~/.ssh`, `~/.aws` and every `.env` on disk), run any shell command, reach the network, and load MCP servers and plugins that bring their own code. Everything it reads — READMEs, issues, web pages, tool output — can carry instructions aimed at the model.
+Claude Code runs in your terminal with your permissions. Left unconfigured, it can read any file your user account can read (including `~/.ssh`, `~/.aws` and every `.env` on disk), run any shell command, reach the network, and load MCP servers and plugins that bring their own code. Everything it reads (READMEs, issues, web pages, tool output) can carry instructions aimed at the model.
 
 This guide makes the harmful outcomes impossible rather than merely unlikely.
 
 ## Start with the audit
 
-Before changing anything, see where you stand. The [audit container](audit/README.md) checks your current setup against this guide in about a minute — offline, read-only, and deleted when it exits:
+Before changing anything, see where you stand. The [audit container](audit/README.md) checks your current setup against this guide in about a minute, offline, read-only, and deleted when it exits:
 
 ```bash
 cd ~/code/my-app                                     # your project folder
@@ -41,10 +41,10 @@ Each finding shows a step number in brackets, like `[2]`. Work through those ste
 
 | Layer | Enforced by | Strength |
 | --- | --- | --- |
-| Sandbox (filesystem + network isolation) | The operating system, on the running process | Strongest — holds even when text is rephrased |
+| Sandbox (filesystem + network isolation) | The operating system, on the running process | Strongest: holds even when text is rephrased |
 | Permission rules (`deny` / `ask` / `allow`) | Claude Code, by matching tool calls and command text | Strong for exact matches; can be talked around |
-| `PreToolUse` hooks | Your scripts, before every tool call | Deterministic — no prompt to click through — but only as good as their patterns |
-| `CLAUDE.md` project rules | The model, as instructions | Advisory — shapes output, never the only layer |
+| `PreToolUse` hooks | Your scripts, before every tool call | Deterministic (no prompt to click through) but only as good as their patterns |
+| `CLAUDE.md` project rules | The model, as instructions | Advisory: shapes output, never the only layer |
 
 ## Before you begin
 

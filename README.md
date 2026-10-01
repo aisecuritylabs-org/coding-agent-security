@@ -1,6 +1,6 @@
 # Coding Agent Security
 
-**Audit your AI coding agent setup in one minute — with a throwaway container that is offline, read-only, and deleted when it's done.**
+**Audit your AI coding agent setup in one minute, with a throwaway container that is offline, read-only, and deleted when it's done.**
 
 Published by [AISecurityLabs.org](https://aisecuritylabs.org).
 
@@ -31,7 +31,7 @@ The quick start below uses the Claude Code audit; the Codex audit runs the same 
 
 ## Quick start
 
-You need Docker Desktop, Docker Engine or Podman — nothing else is installed on your machine.
+You need Docker Desktop, Docker Engine or Podman; nothing else is installed on your machine.
 
 **macOS / Linux / WSL2:**
 
@@ -43,7 +43,7 @@ bash ~/coding-agent-security/claude-code/audit/run.sh
 
 Replace `~/code/my-app` with the folder of the project you want to audit.
 
-**Windows** (Docker Desktop) — these commands work in both Command Prompt and PowerShell:
+**Windows** (Docker Desktop): these commands work in both Command Prompt and PowerShell:
 
 ```bat
 git clone https://github.com/aisecuritylabs-org/coding-agent-security.git "%USERPROFILE%\coding-agent-security"
@@ -55,7 +55,7 @@ Replace `C:\Projects\my-app` with the folder of the project you want to audit. I
 
 The first run builds the image locally from the open [`Dockerfile`](claude-code/audit/Dockerfile) in a few seconds.
 
-After the on-screen summary, you're asked whether to **save a report with how-to-fix steps** — as **HTML**, **text**, **CSV** or **JSON**. Each finding explains **why it matters**, gives the exact setting to add, links to the guide, and is **mapped to OWASP Top 10 for LLM Applications 2025, OWASP Top 10 for Agentic Applications 2026, MITRE ATLAS and NIST AI RMF** ([full mapping](claude-code/audit/FRAMEWORK-MAPPING.md)). Reports go to `claude-code-audit-reports` in your home folder, never into the project. ([Report options](claude-code/audit/README.md#save-a-report-with-how-to-fix-steps))
+After the on-screen summary, you're asked whether to **save a report with how-to-fix steps**, as **HTML**, **text**, **CSV** or **JSON**. Each finding explains **why it matters**, gives the exact setting to add, links to the guide, and is **mapped to OWASP Top 10 for LLM Applications 2025, OWASP Top 10 for Agentic Applications 2026, MITRE ATLAS and NIST AI RMF** ([full mapping](claude-code/audit/FRAMEWORK-MAPPING.md)). Reports go to `claude-code-audit-reports` in your home folder, never into the project. ([Report options](claude-code/audit/README.md#save-a-report-with-how-to-fix-steps))
 
 When you're finished:
 
@@ -69,7 +69,7 @@ docker image rm claude-code-audit
 | --- | --- |
 | **Small and known** | Official Alpine Linux 3.24.2 pinned by digest, plus only `bash` and `jq` from Alpine's official repository, pinned to exact versions. About 18 MB. |
 | **Open** | Everything that runs is two short files: [`Dockerfile`](claude-code/audit/Dockerfile) and [`audit.sh`](claude-code/audit/audit.sh). You build it yourself from source. |
-| **Offline** | Runs with `--network none` — it cannot send anything anywhere. |
+| **Offline** | Runs with `--network none`: it cannot send anything anywhere. |
 | **Read-only** | Your files are mounted read-only and the container filesystem is read-only. It changes nothing. |
 | **What it can read** | Your Claude Code settings, hooks and MCP server list, your shell startup files, and the whole project folder you run it from, including any secrets kept in that project. It doesn't mount `~/.ssh`, cloud credential folders, transcripts or the rest of your home folder, and it never prints the contents of `.env` or credential files. |
 | **Unprivileged** | Runs as you, with every Linux capability dropped. |
@@ -80,7 +80,7 @@ Full details, including exactly which files it reads: [claude-code/audit/README.
 
 ## What it checks
 
-About 40 checks across the whole setup — including the attack patterns behind the Miasma worm, TrustFall, SymJack, Agentjacking and Plugin4Shell:
+About 40 checks across the whole setup, including the attack patterns behind the Miasma worm, TrustFall, SymJack, Agentjacking and Plugin4Shell:
 
 | Area | Examples |
 | --- | --- |
@@ -106,7 +106,7 @@ Each finding's `[step]` links to a section of the step-by-step hardening guide:
 | [6. Self-test](claude-code/06-self-test.md) | Proving the controls work in a live session |
 | [7. Checklist](claude-code/07-checklist.md) | One-page summary |
 
-**The attacks behind the checks:** [THREATS.md](claude-code/THREATS.md) summarises the real incidents and research — the Miasma worm, TrustFall, SymJack, GhostApproval, Plugin4Shell, Agentjacking and more — with a source for every claim.
+**The attacks behind the checks:** [THREATS.md](claude-code/THREATS.md) summarises the real incidents and research (the Miasma worm, TrustFall, SymJack, GhostApproval, Plugin4Shell, Agentjacking and more), with a source for every claim.
 
 Ready-to-copy files: [baseline settings](claude-code/config/settings.json), [hook registration](claude-code/config/hooks.json), [`CLAUDE.md` template](claude-code/config/CLAUDE.md.example), and the [hook scripts](claude-code/hooks/).
 
@@ -124,7 +124,7 @@ More agents will be added one at a time.
 
 ```
 claude-code/
-├── audit/               ← the audit container — start here
+├── audit/               ← the audit container: start here
 │   ├── Dockerfile
 │   ├── audit.sh
 │   ├── run.sh           ← macOS / Linux / WSL2
@@ -157,4 +157,8 @@ AISecurityLabs.org is independent and is not affiliated with, sponsored by or en
 
 ## Contributing
 
-Corrections are welcome. Please open an issue with what you observed, the tool version and your operating system — for audit findings, include the check ID (for example `U09`) from `--json` output.
+Corrections are welcome. Please open an issue with what you observed, the tool version and your operating system. For audit findings, include the check ID (for example `U09`) from `--json` output.
+
+## Contact
+
+Email [info@aisecuritylabs.org](mailto:info@aisecuritylabs.org). To report a security problem in the audit containers, hooks or example configuration, see [SECURITY.md](SECURITY.md).

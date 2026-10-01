@@ -65,10 +65,10 @@
         "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
         "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
         "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
-        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components – including the use of third-party data or software – are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components (including the use of third-party data or software) are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
         "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
-        "MEASURE 2.7": "AI system security and resilience – as identified in the MAP function – are evaluated and documented.",
-        "MEASURE 2.10": "Privacy risk of the AI system – as identified in the MAP function – is examined and documented.",
+        "MEASURE 2.7": "AI system security and resilience (as identified in the MAP function) are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system (as identified in the MAP function) is examined and documented.",
         "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
         "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
         "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
@@ -77,7 +77,7 @@
   },
   "checks": {
     "I01": {
-      "why": "Security fixes for Claude Code itself ship in new releases — for example, project files that ran before the trust dialog (CVE-2025-59536, fixed in 1.0.111) and the Plugin4Shell plugin swap (fixed in 2.1.179). Older versions stay exploitable and lack newer protections such as the strict network allowlist (2.1.219).",
+      "why": "Security fixes for Claude Code itself ship in new releases: for example, project files that ran before the trust dialog (CVE-2025-59536, fixed in 1.0.111) and the Plugin4Shell plugin swap (fixed in 2.1.179). Older versions stay exploitable and lack newer protections such as the strict network allowlist (2.1.219).",
       "owasp_llm": [
         "LLM03"
       ],
@@ -95,29 +95,29 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Advanced setup",
+          "title": "Claude Code docs: Advanced setup",
           "url": "https://code.claude.com/docs/en/setup"
         },
         {
-          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "title": "Check Point Research: CVE-2025-59536 / CVE-2026-21852",
           "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
         },
         {
-          "title": "NVD — CVE-2025-59536",
+          "title": "NVD: CVE-2025-59536",
           "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-59536"
         },
         {
-          "title": "AIR Security — Plugin4Shell",
+          "title": "AIR Security: Plugin4Shell",
           "url": "https://www.air.security/blog-posts/plugin4shell"
         },
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
     },
     "U00": {
-      "why": "Without your user settings the audit cannot assess the sandbox, permissions or credential protection — the controls that matter most.",
+      "why": "Without your user settings the audit cannot assess the sandbox, permissions or credential protection: the controls that matter most.",
       "owasp_llm": [],
       "owasp_agentic": [],
       "mitre_atlas": [],
@@ -126,7 +126,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         }
       ]
@@ -150,17 +150,17 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         },
         {
-          "title": "Claude Code docs — Security",
+          "title": "Claude Code docs: Security",
           "url": "https://code.claude.com/docs/en/security"
         }
       ]
     },
     "U02": {
-      "why": "The sandbox is the only control the operating system enforces on every command and its child processes. Without it, a single successful prompt injection — from a README, issue, web page or tool output — can read any file and reach any host your account can.",
+      "why": "The sandbox is the only control the operating system enforces on every command and its child processes. Without it, a single successful prompt injection (from a README, issue, web page or tool output) can read any file and reach any host your account can.",
       "owasp_llm": [
         "LLM01",
         "LLM06"
@@ -182,11 +182,11 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         },
         {
-          "title": "Claude Code docs — Security",
+          "title": "Claude Code docs: Security",
           "url": "https://code.claude.com/docs/en/security"
         }
       ]
@@ -208,7 +208,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
@@ -233,7 +233,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
@@ -256,7 +256,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
@@ -280,7 +280,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
@@ -302,7 +302,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]
@@ -326,11 +326,11 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         },
         {
-          "title": "Adversa AI — Claude Code deny rules silently bypassed (Apr 2, 2026)",
+          "title": "Adversa AI: Claude Code deny rules silently bypassed (Apr 2, 2026)",
           "url": "https://adversa.ai/blog/critical-claude-code-vulnerability-deny-rules-silently-bypassed-because-security-checks-cost-too-many-tokens/"
         }
       ]
@@ -356,7 +356,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]
@@ -378,7 +378,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]
@@ -403,21 +403,21 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         },
         {
-          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "title": "Check Point Research: CVE-2025-59536 / CVE-2026-21852",
           "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
         },
         {
-          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "title": "Adversa AI: TrustFall (May 7, 2026)",
           "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
         }
       ]
     },
     "U12": {
-      "why": "Additional directories extend where the agent may write — often into other projects or dotfiles — well beyond the project you are working on.",
+      "why": "Additional directories extend where the agent may write (often into other projects or dotfiles) well beyond the project you are working on.",
       "owasp_llm": [
         "LLM06"
       ],
@@ -432,7 +432,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]
@@ -457,11 +457,11 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         },
         {
-          "title": "Claude Code docs — Security",
+          "title": "Claude Code docs: Security",
           "url": "https://code.claude.com/docs/en/security"
         }
       ]
@@ -481,13 +481,13 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         }
       ]
     },
     "U15": {
-      "why": "The settings env block is injected into every session and every subprocess, so the agent and every tool it runs can read — and leak — those secrets.",
+      "why": "The settings env block is injected into every session and every subprocess, so the agent and every tool it runs can read (and leak) those secrets.",
       "owasp_llm": [
         "LLM02"
       ],
@@ -503,13 +503,13 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         }
       ]
     },
     "U16": {
-      "why": "Access to the Docker socket lets a sandboxed command start a privileged container and take over the host — a complete sandbox escape.",
+      "why": "Access to the Docker socket lets a sandboxed command start a privileged container and take over the host: a complete sandbox escape.",
       "owasp_llm": [
         "LLM06"
       ],
@@ -524,13 +524,13 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Sandboxing",
+          "title": "Claude Code docs: Sandboxing",
           "url": "https://code.claude.com/docs/en/sandboxing"
         }
       ]
     },
     "U17": {
-      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code — fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
+      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code; this was fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
       "owasp_llm": [
         "LLM03"
       ],
@@ -547,15 +547,15 @@
       ],
       "sources": [
         {
-          "title": "AIR Security — Plugin4Shell",
+          "title": "AIR Security: Plugin4Shell",
           "url": "https://www.air.security/blog-posts/plugin4shell"
         },
         {
-          "title": "Help Net Security — Plugin4Shell (Sep 18, 2026)",
+          "title": "Help Net Security: Plugin4Shell (Sep 18, 2026)",
           "url": "https://www.helpnetsecurity.com/2026/09/18/plugin4shell-ai-coding-agents-vulnerability/"
         },
         {
-          "title": "Claude Code docs — Plugins",
+          "title": "Claude Code docs: Plugins",
           "url": "https://code.claude.com/docs/en/plugins/overview"
         }
       ]
@@ -581,17 +581,17 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Hooks guide",
+          "title": "Claude Code docs: Hooks guide",
           "url": "https://code.claude.com/docs/en/hooks-guide"
         },
         {
-          "title": "Adversa AI — Claude Code deny rules silently bypassed (Apr 2, 2026)",
+          "title": "Adversa AI: Claude Code deny rules silently bypassed (Apr 2, 2026)",
           "url": "https://adversa.ai/blog/critical-claude-code-vulnerability-deny-rules-silently-bypassed-because-security-checks-cost-too-many-tokens/"
         }
       ]
     },
     "H02": {
-      "why": "Without a file hook, the agent can edit its own settings, CI workflows, lockfiles or .env files — persistent changes that outlive the session and affect everyone who uses the repository.",
+      "why": "Without a file hook, the agent can edit its own settings, CI workflows, lockfiles or .env files: persistent changes that outlive the session and affect everyone who uses the repository.",
       "owasp_llm": [
         "LLM06"
       ],
@@ -607,11 +607,11 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Hooks guide",
+          "title": "Claude Code docs: Hooks guide",
           "url": "https://code.claude.com/docs/en/hooks-guide"
         },
         {
-          "title": "Adversa AI — SymJack: the approval prompt is lying to you (May 26, 2026)",
+          "title": "Adversa AI, SymJack: the approval prompt is lying to you (May 26, 2026)",
           "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
         }
       ]
@@ -632,7 +632,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Hooks guide",
+          "title": "Claude Code docs: Hooks guide",
           "url": "https://code.claude.com/docs/en/hooks-guide"
         }
       ]
@@ -647,7 +647,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Security",
+          "title": "Claude Code docs: Security",
           "url": "https://code.claude.com/docs/en/security"
         }
       ]
@@ -662,7 +662,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Settings reference",
+          "title": "Claude Code docs: Settings reference",
           "url": "https://code.claude.com/docs/en/settings-reference"
         }
       ]
@@ -686,15 +686,15 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — MCP",
+          "title": "Claude Code docs: MCP",
           "url": "https://code.claude.com/docs/en/mcp"
         },
         {
-          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "title": "Check Point Research: CVE-2025-59536 / CVE-2026-21852",
           "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
         },
         {
-          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "title": "Adversa AI: TrustFall (May 7, 2026)",
           "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
         }
       ]
@@ -719,21 +719,21 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Hooks guide",
+          "title": "Claude Code docs: Hooks guide",
           "url": "https://code.claude.com/docs/en/hooks-guide"
         },
         {
-          "title": "StepSecurity — Miasma worm hits Microsoft (Jun 2026)",
+          "title": "StepSecurity: Miasma worm hits Microsoft (Jun 2026)",
           "url": "https://www.stepsecurity.io/blog/miasma-worm-hits-microsoft-again-azure-functions-action-and-72-other-repositories-disabled-after-supply-chain-attack-targeting-ai-coding-agents"
         },
         {
-          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "title": "Check Point Research: CVE-2025-59536 / CVE-2026-21852",
           "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
         }
       ]
     },
     "P04": {
-      "why": "Every MCP server is third-party code with its own credentials, and its output flows straight into the model — both a supply-chain risk and a prompt-injection channel.",
+      "why": "Every MCP server is third-party code with its own credentials, and its output flows straight into the model: both a supply-chain risk and a prompt-injection channel.",
       "owasp_llm": [
         "LLM01",
         "LLM03"
@@ -752,7 +752,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — MCP",
+          "title": "Claude Code docs: MCP",
           "url": "https://code.claude.com/docs/en/mcp"
         },
         {
@@ -779,7 +779,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — MCP",
+          "title": "Claude Code docs: MCP",
           "url": "https://code.claude.com/docs/en/mcp"
         }
       ]
@@ -802,7 +802,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Memory (CLAUDE.md)",
+          "title": "Claude Code docs: Memory (CLAUDE.md)",
           "url": "https://code.claude.com/docs/en/memory"
         }
       ]
@@ -822,13 +822,13 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Memory (CLAUDE.md)",
+          "title": "Claude Code docs: Memory (CLAUDE.md)",
           "url": "https://code.claude.com/docs/en/memory"
         }
       ]
     },
     "P08": {
-      "why": "An .env file that is not gitignored can be committed — by you or by the agent — and published with every secret in it.",
+      "why": "An .env file that is not gitignored can be committed (by you or by the agent) and published with every secret in it.",
       "owasp_llm": [
         "LLM02"
       ],
@@ -843,13 +843,13 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]
     },
     "P09": {
-      "why": "A SessionStart hook runs the moment you start Claude Code in the repository — no tool call, no prompt. In June 2026 the Miasma worm used exactly this: a compromised contributor commit to Azure/durabletask planted a .claude/settings.json SessionStart hook that harvested developer and cloud credentials when the repository was opened. GitHub disabled 73 Microsoft repositories in response.",
+      "why": "A SessionStart hook runs the moment you start Claude Code in the repository, with no tool call and no prompt. In June 2026 the Miasma worm used exactly this: a compromised contributor commit to Azure/durabletask planted a .claude/settings.json SessionStart hook that harvested developer and cloud credentials when the repository was opened. GitHub disabled 73 Microsoft repositories in response.",
       "owasp_llm": [
         "LLM03"
       ],
@@ -869,25 +869,25 @@
       ],
       "sources": [
         {
-          "title": "StepSecurity — Miasma worm hits Microsoft (Jun 2026)",
+          "title": "StepSecurity: Miasma worm hits Microsoft (Jun 2026)",
           "url": "https://www.stepsecurity.io/blog/miasma-worm-hits-microsoft-again-azure-functions-action-and-72-other-repositories-disabled-after-supply-chain-attack-targeting-ai-coding-agents"
         },
         {
-          "title": "The Hacker News — Miasma worm hits 73 Microsoft GitHub repositories",
+          "title": "The Hacker News: Miasma worm hits 73 Microsoft GitHub repositories",
           "url": "https://thehackernews.com/2026/06/miasma-worm-hits-73-microsoft-github.html"
         },
         {
-          "title": "Adversa AI — Top 10 attacks on Claude Code (Sep 23, 2026)",
+          "title": "Adversa AI: Top 10 attacks on Claude Code (Sep 23, 2026)",
           "url": "https://adversa.ai/blog/claude-code-vulnerabilities/"
         },
         {
-          "title": "Claude Code docs — Hooks guide",
+          "title": "Claude Code docs: Hooks guide",
           "url": "https://code.claude.com/docs/en/hooks-guide"
         }
       ]
     },
     "P10": {
-      "why": "Accepting the folder-trust prompt starts the project's local MCP servers as native processes with your full privileges, outside the sandbox. Adversa AI's TrustFall research showed a repository can turn that into code execution — including unattended through the official GitHub Action. Anthropic treats the trust prompt as consent, so this is not a bug that will be patched.",
+      "why": "Accepting the folder-trust prompt starts the project's local MCP servers as native processes with your full privileges, outside the sandbox. Adversa AI's TrustFall research showed a repository can turn that into code execution, including unattended through the official GitHub Action. Anthropic treats the trust prompt as consent, so this is not a bug that will be patched.",
       "owasp_llm": [
         "LLM03",
         "LLM06"
@@ -908,15 +908,15 @@
       ],
       "sources": [
         {
-          "title": "Adversa AI — TrustFall (May 7, 2026)",
+          "title": "Adversa AI: TrustFall (May 7, 2026)",
           "url": "https://adversa.ai/blog/trustfall-coding-agent-security-flaw-rce-claude-cursor-gemini-cli-copilot/"
         },
         {
-          "title": "Check Point Research — CVE-2025-59536 / CVE-2026-21852",
+          "title": "Check Point Research: CVE-2025-59536 / CVE-2026-21852",
           "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
         },
         {
-          "title": "Claude Code docs — MCP",
+          "title": "Claude Code docs: MCP",
           "url": "https://code.claude.com/docs/en/mcp"
         }
       ]
@@ -940,11 +940,11 @@
       ],
       "sources": [
         {
-          "title": "Adversa AI — SymJack: the approval prompt is lying to you (May 26, 2026)",
+          "title": "Adversa AI, SymJack: the approval prompt is lying to you (May 26, 2026)",
           "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
         },
         {
-          "title": "Wiz — GhostApproval (Jul 8, 2026)",
+          "title": "Wiz: GhostApproval (Jul 8, 2026)",
           "url": "https://www.wiz.io/blog/ghostapproval-a-trust-boundary-gap-in-ai-coding-assistants"
         }
       ]
@@ -968,11 +968,11 @@
       ],
       "sources": [
         {
-          "title": "The Hacker News — Agentjacking (Jun 12, 2026)",
+          "title": "The Hacker News: Agentjacking (Jun 12, 2026)",
           "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
         },
         {
-          "title": "The Next Web — Agentjacking",
+          "title": "The Next Web: Agentjacking",
           "url": "https://thenextweb.com/news/agentjacking-ai-coding-agents-sentry"
         },
         {
@@ -982,7 +982,7 @@
       ]
     },
     "P13": {
-      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code — fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
+      "why": "Plugins update automatically in the background. AIR Security's Plugin4Shell showed that on git hosts accepting 40-character hexadecimal branch names, a branch named like the pinned commit could silently swap in malicious code; this was fixed in Claude Code 2.1.179. GitHub rejects such branch names, so the exposure is Bitbucket and self-hosted git.",
       "owasp_llm": [
         "LLM03"
       ],
@@ -999,21 +999,21 @@
       ],
       "sources": [
         {
-          "title": "AIR Security — Plugin4Shell",
+          "title": "AIR Security: Plugin4Shell",
           "url": "https://www.air.security/blog-posts/plugin4shell"
         },
         {
-          "title": "Help Net Security — Plugin4Shell (Sep 18, 2026)",
+          "title": "Help Net Security: Plugin4Shell (Sep 18, 2026)",
           "url": "https://www.helpnetsecurity.com/2026/09/18/plugin4shell-ai-coding-agents-vulnerability/"
         },
         {
-          "title": "Claude Code docs — Plugins",
+          "title": "Claude Code docs: Plugins",
           "url": "https://code.claude.com/docs/en/plugins/overview"
         }
       ]
     },
     "M01": {
-      "why": "User-level MCP servers load in every project. Knowing which ones you run — and where they came from — is the first step in managing third-party risk.",
+      "why": "User-level MCP servers load in every project. Knowing which ones you run (and where they came from) is the first step in managing third-party risk.",
       "owasp_llm": [
         "LLM03"
       ],
@@ -1029,7 +1029,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — MCP",
+          "title": "Claude Code docs: MCP",
           "url": "https://code.claude.com/docs/en/mcp"
         }
       ]
@@ -1053,11 +1053,11 @@
       ],
       "sources": [
         {
-          "title": "The Hacker News — Agentjacking (Jun 12, 2026)",
+          "title": "The Hacker News: Agentjacking (Jun 12, 2026)",
           "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
         },
         {
-          "title": "The Next Web — Agentjacking",
+          "title": "The Next Web: Agentjacking",
           "url": "https://thenextweb.com/news/agentjacking-ai-coding-agents-sentry"
         },
         {
@@ -1084,7 +1084,7 @@
       ],
       "sources": [
         {
-          "title": "Claude Code docs — Permissions",
+          "title": "Claude Code docs: Permissions",
           "url": "https://code.claude.com/docs/en/permissions"
         }
       ]

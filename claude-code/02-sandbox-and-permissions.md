@@ -1,6 +1,6 @@
-# Step 2 — Sandbox and permissions
+# Step 2: Sandbox and permissions
 
-[← Step 1](01-before-you-start.md) · Next: [Step 3 — Hooks →](03-hooks.md)
+[← Step 1](01-before-you-start.md) · Next: [Step 3: Hooks →](03-hooks.md)
 
 **Goal:** a user-level `~/.claude/settings.json` that turns on the OS sandbox in strict mode, blocks credential reads, narrows network access, and sets deny / ask / allow rules.
 
@@ -22,7 +22,7 @@ mkdir -p ~/.claude
 
 ## 2.2 Install the baseline
 
-Copy [`config/settings.json`](config/settings.json) to `~/.claude/settings.json`. If you already had settings, merge the two by hand — keep your existing keys and add the ones below.
+Copy [`config/settings.json`](config/settings.json) to `~/.claude/settings.json`. If you already had settings, merge the two by hand: keep your existing keys and add the ones below.
 
 ```bash
 cp claude-code/config/settings.json ~/.claude/settings.json
@@ -32,10 +32,10 @@ cp claude-code/config/settings.json ~/.claude/settings.json
 
 Open `~/.claude/settings.json` and adjust:
 
-1. **`sandbox.network.allowedDomains`** — add only the package registries and APIs your build actually needs. Keep it short. Avoid `github.com`, paste sites and webhook services.
-2. **`permissions.allow`** — list only commands that cannot cause harm in your project (your test and lint commands, read-only git). Never put `git push`, `docker run` or anything that deploys in `allow`.
-3. **`permissions.ask`** — add your deploy, publish, migration and infrastructure commands (for example `Bash(prisma migrate *)`, `Bash(helm *)`).
-4. **`sandbox.credentials`** — add any other credential files and secret environment variables you keep on this machine (for example `~/.config/gcloud`, `~/.kube/config`, `OPENAI_API_KEY`).
+1. **`sandbox.network.allowedDomains`**: add only the package registries and APIs your build actually needs. Keep it short. Avoid `github.com`, paste sites and webhook services.
+2. **`permissions.allow`**: list only commands that cannot cause harm in your project (your test and lint commands, read-only git). Never put `git push`, `docker run` or anything that deploys in `allow`.
+3. **`permissions.ask`**: add your deploy, publish, migration and infrastructure commands (for example `Bash(prisma migrate *)`, `Bash(helm *)`).
+4. **`sandbox.credentials`**: add any other credential files and secret environment variables you keep on this machine (for example `~/.config/gcloud`, `~/.kube/config`, `OPENAI_API_KEY`).
 
 ## 2.4 Understand what each part does
 
@@ -47,7 +47,7 @@ Open `~/.claude/settings.json` and adjust:
 | `sandbox.enabled` | Turns on OS-level filesystem and network isolation for Bash, PowerShell and Monitor commands. |
 | `sandbox.allowUnsandboxedCommands: false` | "Strict sandbox mode": removes the escape hatch that lets a failing command retry outside the sandbox. |
 | `sandbox.network.allowedDomains` | The only hosts sandboxed commands may reach. |
-| `sandbox.network.strictAllowlist: true` | Hosts outside the allowlist are denied instead of prompted. Only honored in user, managed or `--settings` settings — a repository cannot turn it on or off for you. Requires a recent release (v2.1.219 or later). |
+| `sandbox.network.strictAllowlist: true` | Hosts outside the allowlist are denied instead of prompted. Only honored in user, managed or `--settings` settings; a repository cannot turn it on or off for you. Requires a recent release (v2.1.219 or later). |
 | `sandbox.credentials.files` | Blocks sandboxed reads of these credential paths. |
 | `sandbox.credentials.envVars` | Removes these secret environment variables from sandboxed commands. |
 | `enabledMcpjsonServers: []` | Doesn't auto-enable MCP servers a repository declares in `.mcp.json`. |
@@ -57,7 +57,7 @@ Open `~/.claude/settings.json` and adjust:
 
 | Setting | Why not |
 | --- | --- |
-| `enableAllProjectMcpServers: true` | Auto-enables every MCP server any repository declares — "run any server you find". |
+| `enableAllProjectMcpServers: true` | Auto-enables every MCP server any repository declares: "run any server you find". |
 | `permissions.additionalDirectories` beyond the project | Widens the write boundary, potentially to your home directory. |
 | `--dangerously-skip-permissions` | Skips every permission check, including protected paths. Only for disposable, network-restricted containers. |
 | `allowUnixSockets` containing `/var/run/docker.sock` | Access to the Docker socket is equivalent to root on the host. |
@@ -81,8 +81,8 @@ Start a new session in a project and run:
 
 ## A note on limits
 
-- Deny rules match text as written — they are a speed bump, not a wall. The sandbox's network isolation is the boundary.
-- The sandbox isolates Bash, PowerShell and Monitor. The Read, Edit and Write tools are governed by permission rules, not the sandbox — which is why step 3 adds hooks.
+- Deny rules match text as written; they are a speed bump, not a wall. The sandbox's network isolation is the boundary.
+- The sandbox isolates Bash, PowerShell and Monitor. The Read, Edit and Write tools are governed by permission rules, not the sandbox, which is why step 3 adds hooks.
 - Commands *you* type at the `!` prompt run outside the sandbox.
 
 ## Done when
@@ -92,4 +92,4 @@ Start a new session in a project and run:
 - [ ] `/permissions` shows your rules
 - [ ] No setting from the "never use" table is present
 
-Next: [Step 3 — Hooks →](03-hooks.md)
+Next: [Step 3: Hooks →](03-hooks.md)

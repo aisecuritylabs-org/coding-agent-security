@@ -1,6 +1,6 @@
-# Step 5 — Working habits
+# Step 5: Working habits
 
-[← Step 4](04-mcp-plugins-and-repos.md) · Next: [Step 6 — Self-test →](06-self-test.md)
+[← Step 4](04-mcp-plugins-and-repos.md) · Next: [Step 6: Self-test →](06-self-test.md)
 
 **Goal:** project rules that shape the code Claude writes, and daily habits that cover what no setting can enforce.
 
@@ -23,7 +23,7 @@ Keep it short. Long or contradictory rule files cost tokens on every turn and ma
 | Mode | Who approves | Use when | Avoid when |
 | --- | --- | --- | --- |
 | Manual | You, for each action | Sensitive repos, learning, unfamiliar code | You catch yourself approving without reading |
-| Plan | Nothing runs until you approve a plan | Large refactors, exploring unknown code | — |
+| Plan | Nothing runs until you approve a plan | Large refactors, exploring unknown code | None |
 | acceptEdits | Edits inside the project are auto-approved | A trusted repo you're actively supervising | Repos with CI or infrastructure code you haven't reviewed |
 | Auto | A separate classifier model reviews actions; your ask and deny rules still apply | Daily work with the sandbox on | Your organization has disabled it; highly regulated repos |
 | Bypass (`--dangerously-skip-permissions`) | Nobody | Disposable, network-restricted containers only | Any machine with credentials or real data |
@@ -45,4 +45,4 @@ Keep it short. Long or contradictory rule files cost tokens on every turn and ma
 - [ ] You've picked a default permission mode on purpose
 - [ ] You commit before each session and review before each PR
 
-Next: [Step 6 — Self-test →](06-self-test.md)
+Next: [Step 6: Self-test →](06-self-test.md)

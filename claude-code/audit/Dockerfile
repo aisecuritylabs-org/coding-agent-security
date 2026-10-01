@@ -1,4 +1,4 @@
-# Claude Code security audit — minimal, offline, read-only.
+# Claude Code security audit: minimal, offline, read-only.
 #
 # Base:     official Alpine Linux image, pinned by digest (3.24.2).
 # Packages: bash and jq only, pinned, from Alpine's official main repository.

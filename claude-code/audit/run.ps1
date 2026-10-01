@@ -26,7 +26,7 @@ param(
 # Native commands (docker) report errors through exit codes, checked below.
 # 'Stop' would turn docker's normal stderr output into terminating errors.
 $ErrorActionPreference = 'Continue'
-# Read docker's output as UTF-8 so reports keep characters like "—" intact.
+# Read docker's output as UTF-8 so reports keep non-ASCII characters intact.
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 $Image = if ($env:AUDIT_IMAGE) { $env:AUDIT_IMAGE } else { 'claude-code-audit' }
 $Here = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -66,7 +66,7 @@ Add-Mount "$HOME\.claude\settings.json" '/audit/home-claude/settings.json'
 Add-Mount "$HOME\.claude\hooks"         '/audit/home-claude/hooks'
 Add-Mount "$HOME\.claude.json"          '/audit/claude.json'
 
-# The current directory is audited as the project — but never your whole home.
+# The current directory is audited as the project, but never your whole home.
 $cwd = (Get-Location).Path
 $projectName = ''
 if ($cwd -eq $HOME -or $cwd -match '^[A-Za-z]:\\$') {
