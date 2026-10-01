@@ -131,6 +131,16 @@ PROJ_LOCAL="$PROJECT/.claude/settings.local.json"
 results=()   # one JSON object per check
 n_pass=0 n_warn=0 n_fail=0 n_info=0
 
+# Details quote hook commands, MCP arguments and URLs. Mask anything that looks
+# like a secret before it reaches the screen or a saved report.
+REDACT='def redact:
+  gsub("(?<s>[a-zA-Z][a-zA-Z0-9+.-]*://)[^/@\\s]+@"; "\(.s)***@")
+  | gsub("(?i)(?<k>[?&](token|key|api[_-]?key|access_token|secret|password|passwd|sig|signature|auth|code)=)[^&\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>\\b[a-z0-9_]*(token|secret|password|passwd|api_?key|credential)[a-z0-9_]*=)[^\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>--?(token|api-?key|password|passwd|secret|auth)[= ])[^\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>(bearer|basic) )[a-z0-9._~+/=-]+"; "\(.k)***")
+  | gsub("(?<k>ghp_|gho_|ghs_|ghu_|github_pat_|glpat-|sk-|sk_live_|xox[bpas]-|AKIA)[A-Za-z0-9_-]{8,}"; "\(.k)***");'
+
 # record <STATUS> <id> <guide-step> <title> [detail]
 record() {
   local status="$1" id="$2" step="$3" title="$4" detail="${5:-}"
@@ -145,7 +155,7 @@ record() {
   url="$GUIDE_URL/$(guide_page "$step")"
   results+=("$(jq -cn --arg s "$status" --arg i "$id" --arg g "$step" --arg t "$title" --arg d "$detail" \
     --arg f "$fix" --arg u "$url" \
-    '{status:$s, id:$i, guide_step:$g, title:$t, detail:$d, fix:$f, guide_url:$u}')")
+    "$REDACT"'{status:$s, id:$i, guide_step:$g, title:$t, detail:($d | redact), fix:$f, guide_url:$u}')")
 }
 
 # q <file> <jq-filter>: run a jq filter, empty output on any error

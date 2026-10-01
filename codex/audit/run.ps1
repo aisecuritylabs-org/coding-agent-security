@@ -89,7 +89,11 @@ function Get-ProgramDataState([string]$Path) {
     $writeMask = 0x2 -bor 0x4 -bor 0x10 -bor 0x40 -bor 0x100 -bor 0x10000 -bor 0x40000 -bor 0x80000 -bor 0x40000000 -bor 0x10000000
     try {
         $items = @(Get-Item -LiteralPath $Path -Force -ErrorAction Stop)
-        $items += @(Get-ChildItem -LiteralPath $Path -Recurse -Force -ErrorAction Stop | Select-Object -First 500)
+        # Every file and folder inside is checked. A folder this config path should never hold
+        # thousands of items, so past 5000 the result is unknown rather than a partial pass.
+        $children = @(Get-ChildItem -LiteralPath $Path -Recurse -Force -ErrorAction Stop)
+        if ($children.Count -gt 5000) { return 'unknown' }
+        $items += $children
         foreach ($item in $items) {
             $acl = Get-Acl -LiteralPath $item.FullName -ErrorAction Stop
             $owner = ([Security.Principal.NTAccount]$acl.Owner).Translate([Security.Principal.SecurityIdentifier]).Value

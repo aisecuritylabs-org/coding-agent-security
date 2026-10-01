@@ -1,6 +1,6 @@
 # Coding Agent Security
 
-**Audit your AI coding agent setup in one minute, with a throwaway container that is offline, read-only, and deleted when it's done.**
+**Audit your AI coding agent setup in about a minute, with a throwaway container that is offline, read-only, and deleted when it's done.**
 
 Published by [AISecurityLabs.org](https://aisecuritylabs.org).
 
@@ -161,4 +161,4 @@ Corrections are welcome. Please open an issue with what you observed, the tool v
 
 ## Contact
 
-Email [info@aisecuritylabs.org](mailto:info@aisecuritylabs.org). To report a security problem in the audit containers, hooks or example configuration, see [SECURITY.md](SECURITY.md).
+For any questions, contact us at [info@aisecuritylabs.org](mailto:info@aisecuritylabs.org).

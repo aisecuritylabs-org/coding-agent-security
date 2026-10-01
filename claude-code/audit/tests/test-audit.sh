@@ -64,6 +64,7 @@ check "good: exit code 0"                "[ $good_rc -eq 0 ]"
 check "good: no FAIL results"            "[ \$(jq '.summary.fail' <<<\"\$good\") -eq 0 ]"
 check "good: no WARN results"            "[ \$(jq '.summary.warn' <<<\"\$good\") -eq 0 ]"
 check "good: hooks pass their tests"     "jq -e '.checks[] | select(.id==\"H03\" and .status==\"PASS\")' <<<\"\$good\" >/dev/null"
+check "bad: secrets in commands are redacted"  "! grep -Eq 'FAKEsecretTOKEN1234|FAKEqueryTOKEN' <<<\"\$bad\""
 check "bad: exit code 1"                 "[ $bad_rc -eq 1 ]"
 for id in U02 U03 U09 U11 U13 U15 U16 P03 R01 $( [ "$symlinks" = 1 ] && echo P11 ); do
   check "bad: $id is FAIL" "jq -e '.checks[] | select(.id==\"$id\" and .status==\"FAIL\")' <<<\"\$bad\" >/dev/null"

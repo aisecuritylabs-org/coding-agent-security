@@ -4,7 +4,7 @@ A developer's guide to running OpenAI Codex (CLI, IDE extension and desktop app)
 
 Codex ships with good defaults: an operating-system sandbox, command network access off, and cached web search. Most Codex incidents come from turning those defaults off, trusting a repository that carries configuration, or leaving secrets readable. This guide keeps the defaults working for you and closes the gaps they leave.
 
-**Audit your setup in one minute** with the [Codex security audit](audit/README.md), a throwaway container that is offline, read-only and deleted when it's done. Each finding points to a section below.
+**Audit your setup in about a minute** with the [Codex security audit](audit/README.md), a throwaway container that is offline, read-only and deleted when it's done. Each finding points to a section below.
 
 Every setting here is from OpenAI's [Codex documentation](https://learn.chatgpt.com/docs/config-file/config-reference). Setting names change as Codex evolves, so check them against the reference for your version.
 

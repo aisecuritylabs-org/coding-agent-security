@@ -83,7 +83,7 @@ Save a report with how-to-fix steps? [h]tml, [t]ext, [c]sv, [j]son, [n]o (defaul
 | **CSV** | Tracking fixes across a team in Excel or Google Sheets: one row per check with why, fix, framework columns and guide link. |
 | **JSON** | Scripts and CI. |
 
-Reports are saved to a `claude-code-audit-reports` folder in your home directory, never inside the project, so they can't be committed by accident. The file name includes the project and a timestamp.
+Reports are saved to a `claude-code-audit-reports` folder in your home directory, never inside the project, so they can't be committed by accident. Reports mask values that look like secrets, such as tokens, passwords and credentials in URLs, but review a report before you share it. The file name includes the project and a timestamp.
 
 To skip the question:
 

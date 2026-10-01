@@ -124,6 +124,16 @@ PROJ_CONFIG="$PROJECT/.codex/config.toml"
 results=()
 n_pass=0 n_warn=0 n_fail=0 n_info=0
 
+# Details quote hook commands, MCP arguments and URLs. Mask anything that looks
+# like a secret before it reaches the screen or a saved report.
+REDACT='def redact:
+  gsub("(?<s>[a-zA-Z][a-zA-Z0-9+.-]*://)[^/@\\s]+@"; "\(.s)***@")
+  | gsub("(?i)(?<k>[?&](token|key|api[_-]?key|access_token|secret|password|passwd|sig|signature|auth|code)=)[^&\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>\\b[a-z0-9_]*(token|secret|password|passwd|api_?key|credential)[a-z0-9_]*=)[^\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>--?(token|api-?key|password|passwd|secret|auth)[= ])[^\\s\"'"'"']+"; "\(.k)***")
+  | gsub("(?i)(?<k>(bearer|basic) )[a-z0-9._~+/=-]+"; "\(.k)***")
+  | gsub("(?<k>ghp_|gho_|ghs_|ghu_|github_pat_|glpat-|sk-|sk_live_|xox[bpas]-|AKIA)[A-Za-z0-9_-]{8,}"; "\(.k)***");'
+
 # record <STATUS> <id> <guide-step> <title> [detail]
 record() {
   local status="$1" id="$2" step="$3" title="$4" detail="${5:-}"
@@ -138,7 +148,7 @@ record() {
   url="$GUIDE_URL$(guide_page "$step")"
   results+=("$(jq -cn --arg s "$status" --arg i "$id" --arg g "$step" --arg t "$title" --arg d "$detail" \
     --arg f "$fix" --arg u "$url" \
-    '{status:$s, id:$i, guide_step:$g, title:$t, detail:$d, fix:$f, guide_url:$u}')")
+    "$REDACT"'{status:$s, id:$i, guide_step:$g, title:$t, detail:($d | redact), fix:$f, guide_url:$u}')")
 }
 
 # toml <file> <cache-name>: convert a TOML file to JSON in $TMP; fails on invalid TOML.
@@ -244,15 +254,17 @@ else
   # extends. Codex ignores permission profiles whenever legacy sandbox_mode or
   # [sandbox_workspace_write] settings are present.
   legacy=$(q "$U" 'if has("sandbox_mode") or has("sandbox_workspace_write") then "yes" else "" end')
-  denies=$(jq -r --arg p "$perm" '
+  # Every filesystem rule in the active profile chain as "<access> <path>", e.g.
+  # "deny ~/.ssh" or "deny :workspace_roots/**/.env*".
+  rules_fs=$(jq -r --arg p "$perm" '
     . as $c
     | def chain($n; $d):
         if $d > 10 or ($n | startswith(":")) or (($c.permissions // {})[$n] == null) then []
         else [$n] + chain(($c.permissions[$n].extends // ":"); $d + 1) end;
     chain($p; 0)[] as $n
     | ($c.permissions[$n].filesystem // {})
-    | [paths(scalars) as $x | {k: ($x | map(tostring) | join("/")), v: getpath($x)}]
-    | .[] | select(.v == "deny") | .k' "$U" 2>/dev/null)
+    | [paths(strings) as $x | "\(getpath($x)) \($x | map(tostring) | join("/"))"] | .[]' "$U" 2>/dev/null)
+  denied() { grep -Eq "^deny ($1)\$" <<<"$rules_fs"; }
   if [ -n "$legacy" ]; then
     record WARN C06 2 "Legacy sandbox settings are active, so no deny rules apply" "sandbox_mode or [sandbox_workspace_write] makes Codex ignore permission profiles, and the legacy sandbox limits writes, not reads."
   elif [ -z "$perm" ]; then
@@ -261,17 +273,22 @@ else
     record WARN C06 2 "The default is the built-in $perm profile, which denies no secrets" "Define your own profile that extends $perm and add deny rules."
   else
     missing=""
-    if grep -Eq '\.env\*$' <<<"$denies"; then :
-    elif grep -Eq '\.env$' <<<"$denies" && grep -Eq '\.env\.\*$' <<<"$denies"; then :
-    elif grep -Eq '\.env$' <<<"$denies"; then missing+=".env.* variants such as .env.local "
-    else missing+=".env files "
+    denied '~/\.ssh|~/\.ssh/\*\*' || missing+="~/.ssh "
+    denied '~/\.aws|~/\.aws/\*\*' || missing+="~/.aws "
+    if denied ':workspace_roots/(\*\*/)?\.env\*'; then :
+    elif denied ':workspace_roots/(\*\*/)?\*?\.env' && denied ':workspace_roots/(\*\*/)?\.env\.\*'; then :
+    elif denied ':workspace_roots/(\*\*/)?\*?\.env'; then missing+=".env.* variants such as .env.local "
+    else missing+=".env files in the workspace "
     fi
-    grep -Eq '\.ssh' <<<"$denies" || missing+="~/.ssh "
-    grep -Eq '\.aws' <<<"$denies" || missing+="~/.aws "
-    if [ -n "$missing" ]; then
-      record WARN C06 2 "The active profile ($perm) does not deny some secrets" "Not denied: $missing"
+    # A more specific read or write rule inside a denied folder reopens that part of it.
+    reopened=$(grep -E '^(read|write) (~/\.ssh/|~/\.aws/|:workspace_roots/(\*\*/)?\.env)' <<<"$rules_fs" | cut -d' ' -f2- || true)
+    if [ -n "$missing" ] || [ -n "$reopened" ]; then
+      detail=""
+      [ -n "$missing" ] && detail+="Not denied: $missing"
+      [ -n "$reopened" ] && detail+="${detail:+ }Reopened by a more specific rule: $(echo $reopened)"
+      record WARN C06 2 "The active profile ($perm) does not deny some secrets" "$detail"
     else
-      record PASS C06 2 "The active profile ($perm) denies .env files, ~/.ssh and ~/.aws"
+      record PASS C06 2 "The active profile ($perm) denies ~/.ssh, ~/.aws and workspace .env files" "Judged from your config.toml; confirm reads are really blocked with the self-test."
     fi
   fi
 

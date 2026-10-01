@@ -1,6 +1,6 @@
 # OpenAI Codex security audit
 
-Audit your Codex setup in one minute with a throwaway container that is offline, read-only, and deleted when it's done.
+Audit your Codex setup in about a minute with a throwaway container that is offline, read-only, and deleted when it's done.
 
 ```text
 $ bash ~/coding-agent-security/codex/audit/run.sh
@@ -39,7 +39,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\coding-agent-
 
 On Windows the launcher also checks who can write `C:\ProgramData\OpenAI\Codex`, which the container can't see.
 
-After the summary you're asked whether to save a report (HTML, text, CSV or JSON) with why each finding matters, the exact fix, OWASP, MITRE ATLAS and NIST AI RMF mappings, and sources. Reports go to `codex-audit-reports` in your home folder. Options: `--report html|txt|csv|json`, `--report-dir DIR`, `--no-report`, `--json` (`-Report`, `-ReportDir`, `-NoReport`, `-Json` on Windows).
+After the summary you're asked whether to save a report (HTML, text, CSV or JSON) with why each finding matters, the exact fix, OWASP, MITRE ATLAS and NIST AI RMF mappings, and sources. Reports go to `codex-audit-reports` in your home folder. Reports mask values that look like secrets, such as tokens, passwords and credentials in URLs, but review a report before you share it. Options: `--report html|txt|csv|json`, `--report-dir DIR`, `--no-report`, `--json` (`-Report`, `-ReportDir`, `-NoReport`, `-Json` on Windows).
 
 ## Why you can trust it
 
