@@ -14,7 +14,7 @@ ENGINE="${CONTAINER_ENGINE:-$(command -v docker || command -v podman)}"
 IMAGE="${AUDIT_IMAGE:-claude-code-audit:test}"
 
 if [ -z "${AUDIT_IMAGE:-}" ]; then
-  "$ENGINE" build -q -f "$audit_dir/Dockerfile" -t "$IMAGE" "$cc_dir" >/dev/null || { echo "build failed"; exit 1; }
+  "$ENGINE" build -q -f "$audit_dir/Dockerfile" -t "$IMAGE" "$(cd "$cc_dir/.." && pwd)" >/dev/null || { echo "build failed"; exit 1; }
 fi
 
 work="$(mktemp -d)"
@@ -99,6 +99,30 @@ check "html: complete document"            "grep -q '</html>' <<<\"\$html\""
 check "html: no scripts or external loads" "! grep -Eiq '<script|<link|src=|@import' <<<\"\$html\""
 # The bad fixture's hook command contains <b>x</b>: it must appear escaped.
 check "html: findings are HTML-escaped"    "grep -q '&lt;b&gt;x&lt;/b&gt;' <<<\"\$html\" && ! grep -q '<b>x</b>' <<<\"\$html\""
+
+# Shared .env check (common/gitignore.sh): anchoring, directory-only patterns,
+# templates and tracked files. Each case is the good fixture with a new .gitignore.
+envcase() { # envcase <name> <gitignore contents> <.env path>
+  rm -rf "$work/$1"; cp -r "$work/good" "$work/$1"
+  rm -f "$work/$1/project/.env"
+  printf '%b' "$2" > "$work/$1/project/.gitignore"
+  mkdir -p "$(dirname "$work/$1/project/$3")"; echo 'X=1' > "$work/$1/project/$3"
+  chmod -R a+rX "$work/$1"
+}
+envcase envanchored '/.env\n' 'app/.env'
+envcase envdironly '.env/\n' '.env'
+envcase envexample '.env.example\n' '.env'
+envcase envok '.env\n.env.*\n' 'app/.env'
+envcase envtracked '.env\n' '.env'
+mkdir -p "$work/envtracked/project/.git"
+printf 'DIRC\0\0\0\2\0\0\0\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\4.env\0\0\0\0\0' > "$work/envtracked/project/.git/index"
+chmod -R a+rX "$work/envtracked"
+envstatus() { jq -r '[.checks[] | select(.id == "P08") | .status] | join(",")' <<<"$1"; }
+r=$(run envanchored .bashrc "2.1.290 (Claude Code)"); check "env: /.env doesn't cover app/.env (WARN P08)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envdironly .bashrc "2.1.290 (Claude Code)"); check "env: .env/ doesn't cover a .env file (WARN P08)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envexample .bashrc "2.1.290 (Claude Code)"); check "env: .env.example doesn't cover .env (WARN P08)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envok .bashrc "2.1.290 (Claude Code)"); check "env: .env covers app/.env (PASS P08)" '[ "$(envstatus "$r")" = PASS ]'
+r=$(run envtracked .bashrc "2.1.290 (Claude Code)"); check "env: a .env in the git index is WARN P08" 'jq -e "[.checks[] | select(.id == \"P08\" and (.title | test(\"already committed\")))] | length > 0" <<<"$r" >/dev/null'
 
 echo
 if [ "$fails" -eq 0 ]; then echo "All audit tests passed."; else echo "$fails audit test(s) failed."; exit 1; fi

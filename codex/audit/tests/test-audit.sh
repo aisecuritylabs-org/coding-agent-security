@@ -14,7 +14,7 @@ ENGINE="${CONTAINER_ENGINE:-$(command -v docker || command -v podman)}"
 IMAGE="${AUDIT_IMAGE:-codex-audit:test}"
 
 if [ -z "${AUDIT_IMAGE:-}" ]; then
-  "$ENGINE" build -q -f "$audit_dir/Dockerfile" -t "$IMAGE" "$codex_dir" >/dev/null || { echo "build failed"; exit 1; }
+  "$ENGINE" build -q -f "$audit_dir/Dockerfile" -t "$IMAGE" "$(cd "$codex_dir/.." && pwd)" >/dev/null || { echo "build failed"; exit 1; }
 fi
 
 work="$(mktemp -d)"
@@ -201,6 +201,30 @@ check "windows: W01 user-writable ProgramData is FAIL" 'has "$win" FAIL W01'
 win2=$(run good "codex-cli 0.153.0" json -e HOST_OS=windows -e PROGRAMDATA_STATE=missing)
 check "windows: W01 missing ProgramData is WARN"       'has "$win2" WARN W01'
 check "windows: C05 cached web search is WARN"         'has "$win2" WARN C05'
+
+# Shared .env check (common/gitignore.sh): anchoring, directory-only patterns,
+# templates and tracked files. Each case is the good fixture with a new .gitignore.
+envcase() { # envcase <name> <gitignore contents> <.env path>
+  rm -rf "$work/$1"; cp -r "$work/good" "$work/$1"
+  rm -f "$work/$1/project/.env"
+  printf '%b' "$2" > "$work/$1/project/.gitignore"
+  mkdir -p "$(dirname "$work/$1/project/$3")"; echo 'X=1' > "$work/$1/project/$3"
+  chmod -R a+rX "$work/$1"
+}
+envcase envanchored '/.env\n' 'app/.env'
+envcase envdironly '.env/\n' '.env'
+envcase envexample '.env.example\n' '.env'
+envcase envok '.env\n.env.*\n' 'app/.env'
+envcase envtracked '.env\n' '.env'
+mkdir -p "$work/envtracked/project/.git"
+printf 'DIRC\0\0\0\2\0\0\0\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\4.env\0\0\0\0\0' > "$work/envtracked/project/.git/index"
+chmod -R a+rX "$work/envtracked"
+envstatus() { jq -r '[.checks[] | select(.id == "P10") | .status] | join(",")' <<<"$1"; }
+r=$(run envanchored "codex-cli 0.153.0" json); check "env: /.env doesn't cover app/.env (WARN P10)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envdironly "codex-cli 0.153.0" json); check "env: .env/ doesn't cover a .env file (WARN P10)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envexample "codex-cli 0.153.0" json); check "env: .env.example doesn't cover .env (WARN P10)" '[ "$(envstatus "$r")" = WARN ]'
+r=$(run envok "codex-cli 0.153.0" json); check "env: .env covers app/.env (PASS P10)" '[ "$(envstatus "$r")" = PASS ]'
+r=$(run envtracked "codex-cli 0.153.0" json); check "env: a .env in the git index is WARN P10" 'jq -e "[.checks[] | select(.id == \"P10\" and (.title | test(\"already committed\")))] | length > 0" <<<"$r" >/dev/null'
 
 # Every report format renders.
 for f in text report csv html; do

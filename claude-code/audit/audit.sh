@@ -113,7 +113,7 @@ fix_for() {
     P05) echo 'Pin every MCP server to an exact version in .mcp.json, e.g. "some-server@1.4.2" instead of "some-server" or "@latest".' ;;
     P06) echo 'Read CLAUDE.md before trusting this repository. Remove fetch/install instructions you did not add, or open the repository only in a dev container or VM.' ;;
     P07) echo 'Copy claude-code/config/CLAUDE.md.example from this repository to CLAUDE.md in your project root and adapt it.' ;;
-    P08) echo 'Add these lines to the project'"'"'s .gitignore: .env and .env.*' ;;
+    P08) echo 'Add these lines to the project'"'"'s .gitignore: .env and .env.* (and remove any !.env exception). If a .env file is already committed, remove it with git rm --cached <file> and rotate the secrets it held.' ;;
     R01) echo 'Remove the alias or function that adds --dangerously-skip-permissions from the listed shell startup file, then open a new terminal.' ;;
     P09) echo 'Read the hook command and every script it runs before starting Claude Code in this repository. If you did not write it, remove it or open the repository only in a dev container or VM with no credentials. Organisations can enforce "allowManagedHooksOnly": true in managed settings so only company-approved hooks run.' ;;
     P10) echo 'Before accepting the folder-trust prompt, read .mcp.json and every command it starts. Remove servers you do not recognise. Keep "enableAllProjectMcpServers" off and approve servers by name; organisations can enforce "allowManagedMcpServersOnly": true. Never run Claude Code headless (claude -p, CI) on untrusted branches with production credentials.' ;;
@@ -157,6 +157,10 @@ record() {
     --arg f "$fix" --arg u "$url" \
     "$REDACT"'{status:$s, id:$i, guide_step:$g, title:$t, detail:($d | redact), fix:$f, guide_url:$u}')")
 }
+
+# .env and .gitignore checks shared with the other audits (common/gitignore.sh).
+# shellcheck source=../../common/gitignore.sh
+. "${GITIGNORE_LIB:-/opt/audit/gitignore.sh}"
 
 # q <file> <jq-filter>: run a jq filter, empty output on any error
 q() { [ -f "$1" ] && jq -r "$2" "$1" 2>/dev/null; }
@@ -429,13 +433,7 @@ if [ -d "$PROJECT" ] && [ -n "$(ls -A "$PROJECT" 2>/dev/null)" ]; then
     record WARN P07 5 "No CLAUDE.md in the project" "See claude-code/config/CLAUDE.md.example."
   fi
 
-  if ls -a "$PROJECT" 2>/dev/null | grep -Eq '^\.env(\..*)?$'; then
-    if [ -f "$PROJECT/.gitignore" ] && grep -Eq '^\.env' "$PROJECT/.gitignore"; then
-      record PASS P08 5 ".env files are gitignored"
-    else
-      record WARN P08 5 ".env file present but not in .gitignore" "It can be committed by accident."
-    fi
-  fi
+  check_env_gitignored P08 5
 else
   record INFO P00 4 "No project mounted" "Run from a project directory to check its .claude/, .mcp.json and CLAUDE.md."
 fi

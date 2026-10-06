@@ -12,3 +12,6 @@ drafts/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local Claude Code settings: personal, never committed
+.claude/settings.local.json

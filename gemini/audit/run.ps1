@@ -1,11 +1,11 @@
-# Run the OpenAI Codex security audit in a throwaway, offline container (Windows).
+# Run the Gemini CLI and Code Assist security audit in a throwaway, offline container (Windows).
 #
 # Usage (from the project you want to audit; works from CMD or PowerShell):
-#   powershell -NoProfile -ExecutionPolicy Bypass -File <repo>\codex\audit\run.ps1 [options]
+#   powershell -NoProfile -ExecutionPolicy Bypass -File <repo>\gemini\audit\run.ps1 [options]
 #
 # Options:
 #   -Report html|txt|csv|json   also save a report with how-to-fix steps
-#   -ReportDir <folder>         where to save it (default %USERPROFILE%\codex-audit-reports)
+#   -ReportDir <folder>         where to save it (default %USERPROFILE%\gemini-audit-reports)
 #   -NoReport                   don't ask about saving a report
 #   -Json                       print JSON on screen instead of the summary
 #
@@ -13,26 +13,25 @@
 #
 # Requires Docker Desktop. The container has no network access, sees only
 # the files listed below (read-only), runs unprivileged with every Linux
-# capability dropped, and is deleted when it exits. This script also checks who
-# can write C:\ProgramData\OpenAI\Codex, which the container can't see.
+# capability dropped, and is deleted when it exits.
 
 param(
     [switch]$Json,
     [ValidateSet('', 'html', 'txt', 'csv', 'json')][string]$Report = '',
-    [string]$ReportDir = (Join-Path $HOME 'codex-audit-reports'),
+    [string]$ReportDir = (Join-Path $HOME 'gemini-audit-reports'),
     [switch]$NoReport
 )
 
 # Native commands (docker) report errors through exit codes, checked below.
 $ErrorActionPreference = 'Continue'
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
-$Image = if ($env:AUDIT_IMAGE) { $env:AUDIT_IMAGE } else { 'codex-audit' }
+$Image = if ($env:AUDIT_IMAGE) { $env:AUDIT_IMAGE } else { 'gemini-audit' }
 $Here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $env:DOCKER_CLI_HINTS = 'false'
 
 # Build the image locally from the open Dockerfile, rebuilding when its sources change.
 if (-not $env:AUDIT_IMAGE) {
-    $src = (@("$Here\Dockerfile", "$Here\audit.sh", "$Here\mappings.json", "$Here\..\..\common\gitignore.sh") |
+    $src = (@("$Here\Dockerfile", "$Here\audit.sh", "$Here\mappings.json", "$Here\..\..\common\audit-lib.sh", "$Here\..\..\common\jsonc.awk", "$Here\..\..\common\gitignore.sh") |
         ForEach-Object { [IO.File]::ReadAllText($_) -replace "`r", '' }) -join ''
     $sha = [Security.Cryptography.SHA256]::Create()
     $srcHash = (-join ($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($src)) | ForEach-Object { $_.ToString('x2') })).Substring(0, 16)
@@ -57,26 +56,30 @@ function Add-Mount([string]$Source, [string]$Target) {
     if (Test-Path -LiteralPath $Source) { $script:mounts += @('-v', "${Source}:${Target}:ro") }
 }
 
-# Only these files, plus the project folder below, are shared with the container: never auth.json, transcripts, history or logs.
-$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
-Add-Mount "$codexHome\config.toml" '/audit/codex-home/config.toml'
-Add-Mount "$codexHome\hooks.json"  '/audit/codex-home/hooks.json'
-Add-Mount "$codexHome\rules"       '/audit/codex-home/rules'
-Add-Mount "$codexHome\AGENTS.md"   '/audit/codex-home/AGENTS.md'
-if ((Test-Path -LiteralPath $codexHome) -and -not (Test-Path -LiteralPath "$codexHome\config.toml")) {
-    $mounts += @('--tmpfs', '/audit/codex-home:ro,size=1k')
+# Only these files, plus the project folder below, are shared with the container:
+# never oauth_creds.json, google_accounts.json, chat history or anything else in ~/.gemini.
+$geminiHome = Join-Path $HOME '.gemini'
+Add-Mount "$geminiHome\settings.json" '/audit/gemini-home/settings.json'
+Get-ChildItem -LiteralPath "$geminiHome\policies" -Filter '*.toml' -File -ErrorAction SilentlyContinue | ForEach-Object {
+    Add-Mount $_.FullName "/audit/gemini-home/policies/$($_.Name)"
 }
+# Only each extension's manifest, never its code.
+Get-ChildItem -LiteralPath "$geminiHome\extensions" -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -notmatch '[:,]' } | ForEach-Object {
+    Add-Mount (Join-Path $_.FullName 'gemini-extension.json') "/audit/gemini-home/extensions/$($_.Name)/gemini-extension.json"
+}
+# VS Code user settings, for the Gemini Code Assist agent setting.
+Add-Mount (Join-Path $env:APPDATA 'Code\User\settings.json') '/audit/vscode-user/settings.json'
 
-# Machine-wide files every Codex user on this computer loads.
-$programData = Join-Path $env:ProgramData 'OpenAI\Codex'
-Add-Mount "$programData\config.toml"       '/audit/system-config.toml'
-Add-Mount "$programData\requirements.toml" '/audit/requirements.toml'
+# Machine-wide files every Gemini CLI user on this computer loads.
+$programData = Join-Path $env:ProgramData 'gemini-cli'
+Add-Mount "$programData\settings.json" '/audit/system/settings.json'
+Add-Mount "$programData\system-defaults.json" '/audit/system/system-defaults.json'
 
 # Who can change the ProgramData folder? If anyone other than administrators can
-# write it, or own it, one local user can plant configuration that every Codex
-# user loads (reported by Cymulate). The folder and everything in it must be owned
-# by, and writable only by, Administrators, SYSTEM or TrustedInstaller.
-# CODEX_PROGRAMDATA_DIR overrides the path for testing.
+# write it, or own it, one local user can plant settings, such as a session-start hook, that every Gemini CLI user on the machine loads
+# (reported by Cymulate). The folder and everything in it must be owned by, and
+# writable only by, Administrators, SYSTEM or TrustedInstaller.
+# GEMINI_PROGRAMDATA_DIR overrides the path for testing.
 function Get-ProgramDataState([string]$Path) {
     if (-not (Test-Path -LiteralPath $Path)) { return 'missing' }
     $trusted = @(
@@ -110,7 +113,7 @@ function Get-ProgramDataState([string]$Path) {
     }
 }
 
-$programDataDir = if ($env:CODEX_PROGRAMDATA_DIR) { $env:CODEX_PROGRAMDATA_DIR } else { $programData }
+$programDataDir = if ($env:GEMINI_PROGRAMDATA_DIR) { $env:GEMINI_PROGRAMDATA_DIR } else { $programData }
 $programDataState = Get-ProgramDataState $programDataDir
 
 # PowerShell profiles can hold aliases that turn off the sandbox.
@@ -127,8 +130,10 @@ if ($cwd -eq $HOME -or $cwd -match '^[A-Za-z]:\\$') {
     $projectName = Split-Path -Leaf $cwd
 }
 
-$version = ''
-if (Get-Command codex -ErrorAction SilentlyContinue) { $version = (codex --version 2>$null | Out-String).Trim() }
+$geminiVersion = ''
+if (Get-Command gemini -ErrorAction SilentlyContinue) {
+    $geminiVersion = (gemini --version 2>$null | Select-Object -First 1 | Out-String).Trim()
+}
 
 function Invoke-Audit([string]$Format) {
     docker run --rm `
@@ -139,7 +144,7 @@ function Invoke-Audit([string]$Format) {
         --security-opt no-new-privileges `
         --pids-limit 256 `
         --memory 256m `
-        -e "CODEX_VERSION=$version" `
+        -e "GEMINI_VERSION=$geminiVersion" `
         -e "HOST_OS=windows" `
         -e "PROGRAMDATA_STATE=$programDataState" `
         -e "PROJECT_NAME=$projectName" `
@@ -166,7 +171,7 @@ if ($Report) {
     $format = @{ html = 'html'; txt = 'report'; csv = 'csv'; json = 'json' }[$Report]
     New-Item -ItemType Directory -Force -Path $ReportDir | Out-Null
     $name = if ($projectName) { $projectName } else { 'home' }
-    $file = Join-Path $ReportDir ("codex-audit-{0}-{1}.{2}" -f $name, (Get-Date -Format 'yyyyMMdd-HHmmss'), $Report)
+    $file = Join-Path $ReportDir ("gemini-audit-{0}-{1}.{2}" -f $name, (Get-Date -Format 'yyyyMMdd-HHmmss'), $Report)
     $lines = Invoke-Audit $format
     [IO.File]::WriteAllLines($file, [string[]]$lines, [Text.UTF8Encoding]::new($true))
     Write-Host "Report saved: $file"

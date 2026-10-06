@@ -111,7 +111,7 @@ fix_for() {
     P06) echo 'Remove the listed allow rules from .codex/rules/ before trusting the project, or change them to decision = "prompt".' ;;
     P07) echo 'Read AGENTS.md before trusting this repository. Remove fetch or install instructions you did not add, or open the repository only in a container or Codex cloud.' ;;
     P09) echo 'Copy codex/config/AGENTS.md.example from this repository to AGENTS.md in your project root and adapt it.' ;;
-    P10) echo 'Add these lines to the project'"'"'s .gitignore: .env and .env.*' ;;
+    P10) echo 'Add these lines to the project'"'"'s .gitignore: .env and .env.* (and remove any !.env exception). If a .env file is already committed, remove it with git rm --cached <file> and rotate the secrets it held.' ;;
     P11) echo 'Do not start Codex here until you have checked each listed link: ls -la <link>. Delete links you did not create. A link named like an ordinary file that points at .codex/, AGENTS.md or a dotfile is an attack.' ;;
     P12) echo 'This repository came with a .git/config that runs programs. Remove the listed keys (git config --unset <key>), or better, re-clone it: a normal git clone never copies .git/config. Update Codex (CVE-2026-19590, -19592, -19593).' ;;
     *) echo '' ;;
@@ -150,6 +150,10 @@ record() {
     --arg f "$fix" --arg u "$url" \
     "$REDACT"'{status:$s, id:$i, guide_step:$g, title:$t, detail:($d | redact), fix:$f, guide_url:$u}')")
 }
+
+# .env and .gitignore checks shared with the other audits (common/gitignore.sh).
+# shellcheck source=../../common/gitignore.sh
+. "${GITIGNORE_LIB:-/opt/audit/gitignore.sh}"
 
 # toml <file> <cache-name>: convert a TOML file to JSON in $TMP; fails on invalid TOML.
 toml() { [ -f "$1" ] && yq -p toml -o json . "$1" > "$TMP/$2.json" 2>/dev/null; }
@@ -482,13 +486,7 @@ if [ -d "$PROJECT" ] && [ -n "$(ls -A "$PROJECT" 2>/dev/null)" ]; then
     record WARN P09 5 "No AGENTS.md in the project" "See codex/config/AGENTS.md.example."
   fi
 
-  if ls -a "$PROJECT" 2>/dev/null | grep -Eq '^\.env(\..*)?$'; then
-    if [ -f "$PROJECT/.gitignore" ] && grep -Eq '^\.env' "$PROJECT/.gitignore"; then
-      record PASS P10 5 ".env files are gitignored"
-    else
-      record WARN P10 5 ".env file present but not in .gitignore" "It can be committed by accident."
-    fi
-  fi
+  check_env_gitignored P10 5
 
   # Symlinks that point at agent config, dotfiles, or out of the project (SymJack).
   sensitive_links="" outside_links=""

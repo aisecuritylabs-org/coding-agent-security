@@ -6,7 +6,7 @@
 # Nothing else is downloaded; the audit itself runs with no network.
 #
 # Build (from the repository root):
-#   docker build -f codex/audit/Dockerfile -t codex-audit codex
+#   docker build -f codex/audit/Dockerfile -t codex-audit .
 
 FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
 
@@ -19,10 +19,11 @@ LABEL org.opencontainers.image.title="codex-audit" \
 RUN apk add --no-cache bash=5.3.9-r1 jq=1.8.2-r0 yq-go=4.53.3-r1
 
 # Only the audit script and its framework mappings are copied in.
-COPY audit/audit.sh      /opt/audit/audit.sh
-COPY audit/mappings.json /opt/audit/mappings.json
+COPY codex/audit/audit.sh      /opt/audit/audit.sh
+COPY codex/audit/mappings.json /opt/audit/mappings.json
+COPY common/gitignore.sh          /opt/audit/gitignore.sh
 RUN chmod 0555 /opt/audit/audit.sh \
- && chmod 0444 /opt/audit/mappings.json
+ && chmod 0444 /opt/audit/mappings.json /opt/audit/gitignore.sh
 
 # Unprivileged by default; run.sh / run.ps1 pass your own uid:gid so the
 # container can read your read-only mounts.

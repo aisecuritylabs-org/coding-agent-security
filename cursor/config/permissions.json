@@ -1,0 +1,22 @@
+{
+  // Allowlisted commands run outside the sandbox without asking: keep this list
+  // to read-only commands. Allowlists are not a security boundary.
+  "terminalAllowlist": [
+    "git status",
+    "git diff",
+    "git log",
+    "ls",
+    "pwd"
+  ],
+  // No MCP tool runs without asking. Add specific read-only tools only,
+  // e.g. "github:get_issue", never "*:*".
+  "mcpAllowlist": [],
+  "autoRun": {
+    "allow_instructions": [],
+    "block_instructions": [
+      "Anything that reads .env files, ~/.ssh, ~/.aws or other credential files should go through approval.",
+      "Any command that deletes files outside the build output, pushes to git, publishes a package or deploys should go through approval.",
+      "Any command that sends data to a host other than a package registry should go through approval."
+    ]
+  }
+}

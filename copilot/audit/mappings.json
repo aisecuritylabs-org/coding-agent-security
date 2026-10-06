@@ -1,0 +1,889 @@
+{
+  "about": "Why each GitHub Copilot audit check matters, mapped to AI security frameworks. Mappings are AISecurityLabs.org's interpretation and are not endorsed by the framework owners.",
+  "frameworks": {
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "items": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "version": "2026",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "items": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "mitre_atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.09",
+      "url": "https://atlas.mitre.org/",
+      "items": {
+        "AML.T0010": "AI Supply Chain Compromise",
+        "AML.T0010.005": "AI Supply Chain Compromise: AI Agent Tool",
+        "AML.T0011.002": "User Execution: Poisoned AI Agent Tool",
+        "AML.T0025": "Exfiltration via Cyber Means",
+        "AML.T0050": "Command and Scripting Interpreter",
+        "AML.T0051": "LLM Prompt Injection",
+        "AML.T0051.001": "LLM Prompt Injection: Indirect",
+        "AML.T0053": "AI Agent Tool Invocation",
+        "AML.T0055": "Unsecured Credentials",
+        "AML.T0057": "LLM Data Leakage",
+        "AML.T0074": "Masquerading",
+        "AML.T0080": "AI Agent Context Poisoning",
+        "AML.T0081": "Modify AI Agent Configuration",
+        "AML.T0083": "Credentials from AI Agent Configuration",
+        "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
+        "AML.T0098": "AI Agent Tool Credential Harvesting",
+        "AML.T0099": "AI Agent Tool Data Poisoning",
+        "AML.T0101": "Data Destruction via AI Agent Tool Invocation",
+        "AML.T0105": "Escape to Host",
+        "AML.T0109": "AI Supply Chain Rug Pull",
+        "AML.T0110": "AI Agent Tool Poisoning",
+        "AML.T0112.000": "Machine Compromise: Local AI Agent"
+      }
+    },
+    "nist_ai_rmf": {
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "url": "https://airc.nist.gov/airmf-resources/playbook/",
+      "items": {
+        "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+        "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+        "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components, including the use of third-party data or software, are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
+        "MEASURE 2.7": "AI system security and resilience, as identified in the MAP function, are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system, as identified in the MAP function, is examined and documented.",
+        "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+        "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+        "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
+      }
+    }
+  },
+  "checks": {
+    "I01": {
+      "why": "Copilot fixes ship in VS Code releases. CVE-2026-70335 (fixed in VS Code 1.132.1) let the agent run commands without asking for confirmation; earlier 2026 CVEs covered remote code execution and credential disclosure.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000",
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "CVE record: CVE-2026-70335",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-70335"
+        }
+      ]
+    },
+    "I02": {
+      "why": "The Copilot Chat extension carries its own fixes: CVE-2026-45482, a security feature bypass through path traversal, was fixed in extension 1.123.2.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1"
+      ],
+      "sources": [
+        {
+          "title": "CVE record: CVE-2026-45482",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-45482"
+        }
+      ]
+    },
+    "V00": {
+      "why": "Without your VS Code settings the audit cannot tell whether approvals, Workspace Trust and the sandbox are set.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: AI settings reference",
+          "url": "https://code.visualstudio.com/docs/agents/reference/ai-settings"
+        }
+      ]
+    },
+    "V01": {
+      "why": "VS Code settings use JSON with comments. A file VS Code cannot parse is ignored, and every setting in it silently falls back to its default.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: AI settings reference",
+          "url": "https://code.visualstudio.com/docs/agents/reference/ai-settings"
+        }
+      ]
+    },
+    "V02": {
+      "why": "Global auto-approve removes every confirmation for every tool. CVE-2025-53773 was exactly this: injected text made Copilot switch it on (\"YOLO mode\") and then run commands. VS Code now describes the setting as one that \"disables critical security protections\".",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Embrace The Red: CVE-2025-53773, Copilot YOLO mode via prompt injection",
+          "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
+        },
+        {
+          "title": "MSRC: CVE-2025-53773",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-53773"
+        },
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        }
+      ]
+    },
+    "V03": {
+      "why": "Bypass Approvals and Autopilot skip confirmation for file edits, terminal commands and external tool calls. As a default, they apply to every new session, including ones that read untrusted content.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        }
+      ]
+    },
+    "V04": {
+      "why": "An auto-approved terminal command runs the moment the agent asks for it. VS Code ships rm, curl, wget, chmod and similar commands as approval-required by default; overriding them hands a hijacked session a way to delete data or move it off the machine.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0101",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        },
+        {
+          "title": "VS Code docs: AI settings reference",
+          "url": "https://code.visualstudio.com/docs/agents/reference/ai-settings"
+        }
+      ]
+    },
+    "V05": {
+      "why": "Auto-approved edits to settings, workflows, environment files or lockfiles let the agent change its own safety settings or plant persistent changes without a review.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        },
+        {
+          "title": "Embrace The Red: CVE-2025-53773, Copilot YOLO mode via prompt injection",
+          "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
+        }
+      ]
+    },
+    "V06": {
+      "why": "Workspace Trust keeps agents disabled in folders you have not trusted. Microsoft relies on it as the mitigation for filename-borne prompt injection, which it decided not to fix otherwise (Tenable TRA-2025-53).",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Workspace Trust",
+          "url": "https://code.visualstudio.com/docs/editing/workspaces/workspace-trust"
+        },
+        {
+          "title": "Tenable TRA-2025-53: filename prompt injection in Copilot Chat",
+          "url": "https://www.tenable.com/security/research/tra-2025-53"
+        }
+      ]
+    },
+    "V07": {
+      "why": "Without the terminal sandbox, agent commands run with your full user permissions and network access. The sandbox is off by default, and even when on it allows network access unless chat.agent.sandbox.allowNetwork is set to false.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Agent sandbox",
+          "url": "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+        }
+      ]
+    },
+    "V08": {
+      "why": "MCP servers are third-party code whose output reaches the model. Knowing whether access is open, registry-limited or off is the starting point for managing them.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "V09": {
+      "why": "Discovery makes VS Code load MCP servers configured for other tools, which brings in servers you never reviewed for Copilot.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "V10": {
+      "why": "Wildcard URL approvals let the agent fetch from, and send data to, any matching site without asking.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        }
+      ]
+    },
+    "M01": {
+      "why": "MCP servers configured for your user load in every project. Knowing which ones you run, and where they came from, is the first step in managing third-party risk.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "M02": {
+      "why": "Error trackers, tickets, chat and email carry text written by outsiders, and it reaches the model as tool output. Agentjacking used fake Sentry errors to hijack coding agents.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "M03": {
+      "why": "An unpinned MCP server runs whatever version its registry serves at start-up, so a compromised release reaches you automatically.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "L01": {
+      "why": "The Copilot CLI sandbox is off by default, so commands the CLI runs have your full user permissions and network access.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Copilot CLI configuration directory",
+          "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference"
+        }
+      ]
+    },
+    "L02": {
+      "why": "Saved approvals let matching commands and MCP tools run without asking in that location from then on. An approval for a shell, delete or network command, or for every tool of a server, outlives the task it was given for.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0053",
+        "AML.T0101"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Copilot CLI configuration directory",
+          "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference"
+        },
+        {
+          "title": "GitHub docs: Allowing and denying tools in Copilot CLI",
+          "url": "https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools"
+        }
+      ]
+    },
+    "L03": {
+      "why": "Wildcard URL approvals let the CLI fetch from, and send data to, any matching site without asking.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Copilot CLI configuration directory",
+          "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference"
+        }
+      ]
+    },
+    "L04": {
+      "why": "With permissions.disableBypassPermissionsMode set to \"disable\", the CLI ignores --allow-all, --yolo and the other allow-all flags, so an alias, script or habit cannot turn approvals off.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Copilot CLI configuration directory",
+          "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference"
+        }
+      ]
+    },
+    "P00": {
+      "why": "Without a project the audit cannot check repository files Copilot reads as configuration and instructions.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Custom instructions",
+          "url": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+        }
+      ]
+    },
+    "P01": {
+      "why": "A repository that changes approval, trust, sandbox or MCP settings in .vscode/settings.json is trying to weaken your agent. CVE-2025-53773 worked by getting the agent to write an auto-approve setting into a VS Code settings file.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Embrace The Red: CVE-2025-53773, Copilot YOLO mode via prompt injection",
+          "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
+        },
+        {
+          "title": "VS Code docs: Tool approvals",
+          "url": "https://code.visualstudio.com/docs/agents/run/approvals"
+        }
+      ]
+    },
+    "P02": {
+      "why": "Workspace MCP servers inherit Workspace Trust and can start without a separate prompt once you trust the folder, running as local processes with your permissions.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "P03": {
+      "why": "A project that wires servers reading outsider-written content into the agent gives outsiders a way to send it instructions.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        }
+      ]
+    },
+    "P04": {
+      "why": "An unpinned project MCP server runs whatever version its registry serves, for everyone who opens the repository.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: MCP servers",
+          "url": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+        }
+      ]
+    },
+    "P05": {
+      "why": "Instruction files (copilot-instructions.md, .instructions.md, AGENTS.md, CLAUDE.md, custom agents and prompt files) are loaded as instructions. A repository can use them for persistent prompt injection.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Custom instructions",
+          "url": "https://code.visualstudio.com/docs/agent-customization/custom-instructions"
+        }
+      ]
+    },
+    "P06": {
+      "why": "Zero-width and bidirectional control characters hide instructions from people while the model still reads them. Pillar Security showed this \"Rules File Backdoor\" steering Copilot and Cursor.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Pillar Security: Rules File Backdoor",
+          "url": "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+        }
+      ]
+    },
+    "P07": {
+      "why": "copilot-setup-steps.yml prepares the cloud agent environment, and the agent firewall does not apply to processes started there. A step that downloads and runs code runs it with the job's secrets.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Customizing the cloud agent environment",
+          "url": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment"
+        }
+      ]
+    },
+    "P08": {
+      "why": "Agent hooks run commands on agent events. Hooks shipped in a repository run for everyone who works on it.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Security considerations for AI",
+          "url": "https://code.visualstudio.com/docs/agents/run/security"
+        }
+      ]
+    },
+    "P09": {
+      "why": ".env files hold API keys and connection strings. If they are not ignored by git, one \"commit everything\" publishes them.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "VS Code docs: Security considerations for AI",
+          "url": "https://code.visualstudio.com/docs/agents/run/security"
+        }
+      ]
+    },
+    "P10": {
+      "why": "A link with an innocent name can point at agent configuration or dotfiles. Researchers showed approval prompts displaying the harmless name while the write landed on the real target (SymJack).",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0074",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI: SymJack",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        }
+      ]
+    },
+    "P11": {
+      "why": "Git settings such as core.hooksPath and core.fsmonitor run programs during ordinary git commands, which agents run constantly. Coding-agent CVEs have used a repository delivered with its own .git/config.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "NVD: CVE-2026-19593 (git config execution in a coding agent)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19593"
+        }
+      ]
+    },
+    "P12": {
+      "why": ".github/copilot/settings.json is committed with the repository and applies to everyone who runs the Copilot CLI in it. Its hooks run commands, and its plugins and marketplaces install code, for every collaborator.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Copilot CLI configuration directory",
+          "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference"
+        }
+      ]
+    },
+    "S01": {
+      "why": "An alias or export that adds --allow-all, --yolo, --allow-all-tools or COPILOT_ALLOW_ALL silently removes approvals from every Copilot CLI session you start.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "GitHub docs: Allowing and denying tools in Copilot CLI",
+          "url": "https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools"
+        }
+      ]
+    }
+  }
+}

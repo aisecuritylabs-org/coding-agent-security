@@ -26,8 +26,11 @@ Every finding points to the step of the guide that explains the fix.
 | --- | --- | --- |
 | Claude Code | [claude-code/](claude-code/README.md) | `bash claude-code/audit/run.sh` |
 | OpenAI Codex | [codex/](codex/README.md) | `bash codex/audit/run.sh` ([details](codex/audit/README.md)) |
+| GitHub Copilot | [copilot/](copilot/README.md) | `bash copilot/audit/run.sh` ([details](copilot/audit/README.md)) |
+| Cursor | [cursor/](cursor/README.md) | `bash cursor/audit/run.sh` ([details](cursor/audit/README.md)) |
+| Gemini CLI and Code Assist | [gemini/](gemini/README.md) | `bash gemini/audit/run.sh` ([details](gemini/audit/README.md)) |
 
-The quick start below uses the Claude Code audit; the Codex audit runs the same way from `codex/audit/`.
+The quick start below uses the Claude Code audit; the other audits run the same way from their own `audit/` folders.
 
 ## Quick start
 

@@ -57,13 +57,13 @@ export DOCKER_CLI_HINTS=false
 # a fingerprint of its source files, so it is rebuilt whenever they change.
 if [ -z "${AUDIT_IMAGE:-}" ]; then
   sum() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
-  src_hash=$(cat "$here/Dockerfile" "$here/audit.sh" "$here/mappings.json" | tr -d '\r' | sum | cut -c1-16)
+  src_hash=$(cat "$here/Dockerfile" "$here/audit.sh" "$here/mappings.json" "$here/../../common/gitignore.sh" | tr -d '\r' | sum | cut -c1-16)
   have_hash=$("$ENGINE" image inspect "$IMAGE" --format '{{ index .Config.Labels "org.aisecuritylabs.src-hash" }}' 2>/dev/null || true)
   if [ "$have_hash" != "$src_hash" ]; then
     old_id=$("$ENGINE" image inspect "$IMAGE" --format '{{.Id}}' 2>/dev/null || true)
     echo "Building $IMAGE from $here/Dockerfile ..." >&2
     "$ENGINE" build -q --label "org.aisecuritylabs.src-hash=$src_hash" \
-      -f "$here/Dockerfile" -t "$IMAGE" "$here/.." >/dev/null
+      -f "$here/Dockerfile" -t "$IMAGE" "$here/../.." >/dev/null
     [ -n "$old_id" ] && "$ENGINE" image rm "$old_id" >/dev/null 2>&1 || true
   fi
 fi

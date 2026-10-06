@@ -1,0 +1,1022 @@
+{
+  "about": "Why each Gemini CLI and Code Assist audit check matters, mapped to AI security frameworks. Mappings are AISecurityLabs.org's interpretation and are not endorsed by the framework owners.",
+  "frameworks": {
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "items": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "version": "2026",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "items": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "mitre_atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.09",
+      "url": "https://atlas.mitre.org/",
+      "items": {
+        "AML.T0010": "AI Supply Chain Compromise",
+        "AML.T0010.005": "AI Supply Chain Compromise: AI Agent Tool",
+        "AML.T0011.002": "User Execution: Poisoned AI Agent Tool",
+        "AML.T0025": "Exfiltration via Cyber Means",
+        "AML.T0050": "Command and Scripting Interpreter",
+        "AML.T0051": "LLM Prompt Injection",
+        "AML.T0051.001": "LLM Prompt Injection: Indirect",
+        "AML.T0053": "AI Agent Tool Invocation",
+        "AML.T0055": "Unsecured Credentials",
+        "AML.T0057": "LLM Data Leakage",
+        "AML.T0074": "Masquerading",
+        "AML.T0080": "AI Agent Context Poisoning",
+        "AML.T0081": "Modify AI Agent Configuration",
+        "AML.T0083": "Credentials from AI Agent Configuration",
+        "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
+        "AML.T0098": "AI Agent Tool Credential Harvesting",
+        "AML.T0099": "AI Agent Tool Data Poisoning",
+        "AML.T0101": "Data Destruction via AI Agent Tool Invocation",
+        "AML.T0105": "Escape to Host",
+        "AML.T0109": "AI Supply Chain Rug Pull",
+        "AML.T0110": "AI Agent Tool Poisoning",
+        "AML.T0112.000": "Machine Compromise: Local AI Agent"
+      }
+    },
+    "nist_ai_rmf": {
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "url": "https://airc.nist.gov/airmf-resources/playbook/",
+      "items": {
+        "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+        "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+        "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components, including the use of third-party data or software, are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
+        "MEASURE 2.7": "AI system security and resilience, as identified in the MAP function, are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system, as identified in the MAP function, is examined and documented.",
+        "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+        "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+        "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
+      }
+    }
+  },
+  "checks": {
+    "I01": {
+      "why": "Gemini CLI before 0.39.1 trusted the workspace in headless runs, loading its configuration and environment variables, and ignored tool allowlists under --yolo (CVE-2026-12537, scored 10.0 by Google).",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000",
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "GitHub advisory GHSA-wpqr-6v78-jr5g (CVE-2026-12537): Gemini CLI trusted the workspace in headless mode",
+          "url": "https://github.com/advisories/GHSA-wpqr-6v78-jr5g"
+        }
+      ]
+    },
+    "G00": {
+      "why": "Without a settings file Gemini CLI runs on its defaults, and sandboxing is off by default.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "G01": {
+      "why": "A settings file Gemini CLI cannot parse means its settings may not apply, so every protection in it silently falls back to its default.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "G02": {
+      "why": "\"Sandboxing is disabled by default.\" Without it, shell commands and file edits run with your full user permissions.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Sandboxing",
+          "url": "https://geminicli.com/docs/cli/sandbox"
+        }
+      ]
+    },
+    "G03": {
+      "why": "Folder trust keeps an untrusted folder's .gemini/settings.json, .env file and MCP servers from loading. Turned off, any repository you open configures the agent.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        }
+      ]
+    },
+    "G04": {
+      "why": "security.disableYoloMode makes Gemini CLI ignore --yolo, so an alias, script or habit cannot remove every confirmation.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "G05": {
+      "why": "auto_edit approves every file edit without asking, including edits to settings and context files the agent then loads.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "G06": {
+      "why": "Tools in tools.allowed bypass the confirmation dialog. Tracebit showed an allowed grep chained with a second command that exfiltrated the user's environment variables without asking.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0101",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        },
+        {
+          "title": "Tracebit: code execution through deception in Gemini CLI",
+          "url": "https://tracebit.com/blog/code-exec-deception-gemini-ai-cli-hijack"
+        }
+      ]
+    },
+    "G07": {
+      "why": "With network access in the sandbox, a sandboxed command can still send data anywhere.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        },
+        {
+          "title": "Gemini CLI docs: Sandboxing",
+          "url": "https://geminicli.com/docs/cli/sandbox"
+        }
+      ]
+    },
+    "G08": {
+      "why": "\"Allow for all future sessions\" makes an approval outlive the task it was given for.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "G09": {
+      "why": "Extensions bundle MCP servers, hooks, context files and policies. Plugin4Shell showed a commit-pinned Gemini CLI extension being swapped for different code; AIR Security reported no fix for Gemini CLI.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Extensions",
+          "url": "https://geminicli.com/docs/extensions"
+        },
+        {
+          "title": "AIR Security: Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        }
+      ]
+    },
+    "M01": {
+      "why": "MCP servers configured for your user load in every project. Knowing which ones you run, and where they came from, is the first step in managing third-party risk.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "M02": {
+      "why": "Servers that read errors, tickets, chat or email bring outsider-written text into the agent. Fake error reports have hijacked coding agents this way (Agentjacking).",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        }
+      ]
+    },
+    "M03": {
+      "why": "An unpinned MCP server runs whatever version its registry serves at start-up, so a compromised release reaches you automatically.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "M04": {
+      "why": "\"trust\": true makes Gemini CLI \"bypass all tool call confirmations\" for that server, so every tool it offers runs without asking.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "M05": {
+      "why": "A secret written into settings.json can be read by anything that reads the file.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "H01": {
+      "why": "Hooks run commands with your privileges on agent events. A hook that downloads and runs code runs whatever that server sends, every time.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Hooks",
+          "url": "https://geminicli.com/docs/hooks"
+        }
+      ]
+    },
+    "E01": {
+      "why": "Installed extensions add MCP servers, hooks and context files to every session.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Extensions",
+          "url": "https://geminicli.com/docs/extensions"
+        }
+      ]
+    },
+    "E02": {
+      "why": "An extension that adds a trusted MCP server or a hook running remote code gives its publisher code execution in your sessions.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Extensions",
+          "url": "https://geminicli.com/docs/extensions"
+        },
+        {
+          "title": "AIR Security: Plugin4Shell",
+          "url": "https://www.air.security/blog-posts/plugin4shell"
+        }
+      ]
+    },
+    "R01": {
+      "why": "A policy rule with decision \"allow\" lets matching calls run without asking. An allow rule for every shell command, or for a shell, delete or network tool, removes confirmations where they matter most.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0101"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Policy engine",
+          "url": "https://geminicli.com/docs/reference/policy-engine"
+        }
+      ]
+    },
+    "C01": {
+      "why": "geminicodeassist.agentYoloMode makes Gemini Code Assist agent mode act without asking.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini Code Assist docs: Agent mode",
+          "url": "https://developers.google.com/gemini-code-assist/docs/use-agentic-chat-pair-programmer"
+        }
+      ]
+    },
+    "P00": {
+      "why": "Without a project the audit cannot check repository files Gemini reads as configuration and context.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: GEMINI.md context files",
+          "url": "https://geminicli.com/docs/cli/gemini-md"
+        }
+      ]
+    },
+    "P01": {
+      "why": "A trusted folder's .gemini/settings.json overrides your user settings, so a repository can turn the sandbox off or allow tools for everyone who trusts it.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        },
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        }
+      ]
+    },
+    "P02": {
+      "why": "Project MCP servers start as local processes with your permissions once you trust the folder.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        },
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        }
+      ]
+    },
+    "P03": {
+      "why": "A project that wires servers reading outsider-written content into the agent gives outsiders a way to send it instructions.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        }
+      ]
+    },
+    "P04": {
+      "why": "An unpinned project MCP server runs whatever version its registry serves, for everyone who opens the repository.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "P05": {
+      "why": "A repository that marks its own MCP servers as trusted removes every confirmation for their tools.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: MCP servers",
+          "url": "https://geminicli.com/docs/tools/mcp-server"
+        }
+      ]
+    },
+    "P06": {
+      "why": "Project hooks run commands on agent events for everyone who trusts the folder.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Hooks",
+          "url": "https://geminicli.com/docs/hooks"
+        }
+      ]
+    },
+    "P07": {
+      "why": "A project hook that downloads and runs code gives the repository, or whoever controls that download, code execution on your machine.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Hooks",
+          "url": "https://geminicli.com/docs/hooks"
+        }
+      ]
+    },
+    "P08": {
+      "why": "A trusted folder's .env file is loaded into Gemini CLI's environment, and variables such as GEMINI_SANDBOX change how it runs, including turning the sandbox off.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        },
+        {
+          "title": "Gemini CLI docs: Sandboxing",
+          "url": "https://geminicli.com/docs/cli/sandbox"
+        }
+      ]
+    },
+    "P09": {
+      "why": "GEMINI.md and AGENTS.md files are loaded as instructions. A repository can use them for persistent prompt injection; Tracebit hid one in a file presented as a licence.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: GEMINI.md context files",
+          "url": "https://geminicli.com/docs/cli/gemini-md"
+        },
+        {
+          "title": "Tracebit: code execution through deception in Gemini CLI",
+          "url": "https://tracebit.com/blog/code-exec-deception-gemini-ai-cli-hijack"
+        }
+      ]
+    },
+    "P10": {
+      "why": "Zero-width and bidirectional control characters hide instructions from people while the model still reads them (the \"Rules File Backdoor\" technique).",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Pillar Security: Rules File Backdoor",
+          "url": "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+        }
+      ]
+    },
+    "P11": {
+      "why": "run-gemini-cli before 0.1.22 trusted the workspace in CI (CVE-2026-12537), and researchers used issue text to make the Gemini CLI Action leak its API key (Comment and Control). Running it without confirmations on outsider-written issues or pull requests hands them the workflow's secrets.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI03",
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "GitHub advisory GHSA-wpqr-6v78-jr5g (CVE-2026-12537): Gemini CLI trusted the workspace in headless mode",
+          "url": "https://github.com/advisories/GHSA-wpqr-6v78-jr5g"
+        },
+        {
+          "title": "Aonan Guan: Comment and Control",
+          "url": "https://oddguan.com/blog/comment-and-control-prompt-injection-credential-theft-claude-code-gemini-cli-github-copilot/"
+        }
+      ]
+    },
+    "P12": {
+      "why": ".env files hold API keys and connection strings. If they are not ignored by git, one \"commit everything\" publishes them.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        }
+      ]
+    },
+    "P13": {
+      "why": "A link with an innocent name can point at agent configuration or dotfiles. Researchers showed approval prompts displaying the harmless name while the write landed on the real target (SymJack).",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0074",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI: SymJack",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        }
+      ]
+    },
+    "P14": {
+      "why": "Git settings such as core.hooksPath and core.fsmonitor run programs during ordinary git commands, which agents run constantly. Coding-agent CVEs have used a repository delivered with its own .git/config.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "NVD: CVE-2026-19593 (git config execution in a coding agent)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-19593"
+        }
+      ]
+    },
+    "W01": {
+      "why": "Windows doesn't restrict new folders under ProgramData. Cymulate showed a standard user creating C:\\ProgramData\\gemini-cli and planting a system-defaults.json with a session-start hook that runs for every user; Google said it would be \"addressed as a documentation update\".",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cymulate: privilege escalation through ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        },
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        }
+      ]
+    },
+    "W02": {
+      "why": "Machine-wide settings apply to every Gemini CLI user on the machine, and system settings override user settings. A hook or weaker setting there affects every session.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        },
+        {
+          "title": "Cymulate: privilege escalation through ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        }
+      ]
+    },
+    "S01": {
+      "why": "An alias or export that adds --yolo, --skip-trust, GEMINI_SANDBOX=false or GEMINI_CLI_TRUST_WORKSPACE=true silently removes confirmations, trust checks or the sandbox from every session you start.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Gemini CLI docs: Configuration reference",
+          "url": "https://geminicli.com/docs/reference/configuration"
+        },
+        {
+          "title": "Gemini CLI docs: Trusted folders",
+          "url": "https://geminicli.com/docs/cli/trusted-folders"
+        }
+      ]
+    }
+  }
+}

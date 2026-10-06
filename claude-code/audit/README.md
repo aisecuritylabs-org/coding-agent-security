@@ -210,7 +210,7 @@ docker image rm ghcr.io/aisecuritylabs-org/claude-code-audit:1.0.0
 ## Build and test it yourself
 
 ```bash
-docker build -f claude-code/audit/Dockerfile -t claude-code-audit claude-code
+docker build -f claude-code/audit/Dockerfile -t claude-code-audit .
 bash claude-code/audit/tests/test-audit.sh
 ```
 

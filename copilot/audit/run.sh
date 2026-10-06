@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Run the Claude Code security audit in a throwaway, offline container.
+# Run the GitHub Copilot security audit in a throwaway, offline container.
 #
 # Usage (from the project you want to audit):
-#   bash /path/to/coding-agent-security/claude-code/audit/run.sh [options]
+#   bash /path/to/coding-agent-security/copilot/audit/run.sh [options]
 #
 # Options:
 #   --report html|txt|csv|json   also save a report with how-to-fix steps
-#   --report-dir DIR             where to save it (default ~/claude-code-audit-reports)
+#   --report-dir DIR             where to save it (default ~/copilot-audit-reports)
 #   --no-report                  don't ask about saving a report
 #   --json                       print JSON on screen instead of the summary
 #
@@ -23,13 +23,13 @@
 
 set -eu
 
-IMAGE="${AUDIT_IMAGE:-claude-code-audit}"
+IMAGE="${AUDIT_IMAGE:-copilot-audit}"
 ENGINE="${CONTAINER_ENGINE:-$(command -v docker || command -v podman || true)}"
 [ -n "$ENGINE" ] || { echo "Docker or Podman is required." >&2; exit 2; }
 
 screen_format=text
 report=""
-report_dir="$HOME/claude-code-audit-reports"
+report_dir="$HOME/copilot-audit-reports"
 ask=1
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -51,30 +51,38 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 here="$(cd "$(dirname "$0")" && pwd)"
-export DOCKER_CLI_HINTS=false   # no Docker Desktop "what's next" adverts
+export DOCKER_CLI_HINTS=false
 
 # Build the image locally from the open Dockerfile. The image is labelled with
 # a fingerprint of its source files, so it is rebuilt whenever they change.
 if [ -z "${AUDIT_IMAGE:-}" ]; then
   sum() { if command -v sha256sum >/dev/null; then sha256sum; else shasum -a 256; fi; }
-  src_hash=$(cat "$here/Dockerfile" "$here/audit.sh" "$here/mappings.json" "$here/../../common/gitignore.sh" "$here/../tests/test-hooks.sh" | tr -d '\r' | sum | cut -c1-16)
+  src_hash=$(cat "$here/Dockerfile" "$here/audit.sh" "$here/mappings.json" "$here/../../common/audit-lib.sh" "$here/../../common/jsonc.awk" "$here/../../common/gitignore.sh" | tr -d '\r' | sum | cut -c1-16)
   have_hash=$("$ENGINE" image inspect "$IMAGE" --format '{{ index .Config.Labels "org.aisecuritylabs.src-hash" }}' 2>/dev/null || true)
   if [ "$have_hash" != "$src_hash" ]; then
     old_id=$("$ENGINE" image inspect "$IMAGE" --format '{{.Id}}' 2>/dev/null || true)
     echo "Building $IMAGE from $here/Dockerfile ..." >&2
     "$ENGINE" build -q --label "org.aisecuritylabs.src-hash=$src_hash" \
       -f "$here/Dockerfile" -t "$IMAGE" "$here/../.." >/dev/null
-    [ -n "$old_id" ] && "$ENGINE" image rm "$old_id" >/dev/null 2>&1 || true   # drop the outdated image
+    [ -n "$old_id" ] && "$ENGINE" image rm "$old_id" >/dev/null 2>&1 || true
   fi
 fi
 
 mounts=()
 add() { [ -e "$1" ] && mounts+=(-v "$1:$2:ro"); return 0; }
 
-# Only these files, plus the project folder below, are shared with the container. Never transcripts, ~/.ssh or cloud credential folders.
-add "$HOME/.claude/settings.json" /audit/home-claude/settings.json
-add "$HOME/.claude/hooks"         /audit/home-claude/hooks
-add "$HOME/.claude.json"          /audit/claude.json
+# Only these files, plus the project folder below, are shared with the container:
+# never the Copilot CLI's config.json (authentication state), session history or logs.
+case "$(uname -s)" in
+  Darwin) vscode_user="$HOME/Library/Application Support/Code/User" ;;
+  *)      vscode_user="${XDG_CONFIG_HOME:-$HOME/.config}/Code/User" ;;
+esac
+add "$vscode_user/settings.json" /audit/vscode-user/settings.json
+add "$vscode_user/mcp.json"      /audit/vscode-user/mcp.json
+copilot_home="${COPILOT_HOME:-$HOME/.copilot}"
+add "$copilot_home/settings.json"           /audit/copilot-home/settings.json
+add "$copilot_home/permissions-config.json" /audit/copilot-home/permissions-config.json
+add "$copilot_home/mcp-config.json"         /audit/copilot-home/mcp-config.json
 for rc in .bashrc .zshrc .profile .bash_profile .bash_aliases .zprofile; do
   add "$HOME/$rc" "/audit/rc/$rc"
 done
@@ -86,10 +94,13 @@ else
   add "$PWD" /audit/project
   project_name="$(basename "$PWD")"
 fi
+# A placeholder lets the audit tell "no settings.json" apart from "not shared".
+[ -d "$vscode_user" ] && [ ! -e "$vscode_user/settings.json" ] && [ ! -e "$vscode_user/mcp.json" ] && mounts+=(--tmpfs /audit/vscode-user:ro,size=1k)
 
-version="$(claude --version 2>/dev/null || true)"
+vscode_version="$(code --version 2>/dev/null | head -n1 || true)"
+chat_version="$(code --list-extensions --show-versions 2>/dev/null | grep -i '^github.copilot-chat@' | cut -d@ -f2 || true)"
 
-audit() { # audit <format>: run the container once and print that format
+audit() {
   "$ENGINE" run --rm \
     --network none \
     --read-only \
@@ -99,7 +110,8 @@ audit() { # audit <format>: run the container once and print that format
     --pids-limit 256 \
     --memory 256m \
     --user "$(id -u):$(id -g)" \
-    -e CLAUDE_VERSION="$version" \
+    -e VSCODE_VERSION="$vscode_version" \
+    -e COPILOT_CHAT_VERSION="$chat_version" \
     -e PROJECT_NAME="$project_name" \
     "${mounts[@]}" \
     "$IMAGE" --format "$1"
@@ -110,7 +122,6 @@ audit "$screen_format"
 status=$?
 set -e
 
-# Offer a report file with how-to-fix steps.
 if [ -z "$report" ] && [ "$ask" -eq 1 ] && [ -t 0 ] && [ -t 1 ]; then
   echo
   printf 'Save a report with how-to-fix steps? [h]tml, [t]ext, [c]sv, [j]son, [n]o (default n): '
@@ -132,7 +143,7 @@ if [ -n "$report" ]; then
     *) echo "Unknown report format '$report' (use html, txt, csv or json)." >&2; exit 2 ;;
   esac
   mkdir -p "$report_dir"
-  file="$report_dir/claude-code-audit-${project_name:-home}-$(date '+%Y%m%d-%H%M%S').$report"
+  file="$report_dir/copilot-audit-${project_name:-home}-$(date '+%Y%m%d-%H%M%S').$report"
   audit "$fmt" > "$file" || true
   echo "Report saved: $file"
 fi

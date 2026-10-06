@@ -1,0 +1,39 @@
+// Baseline VS Code user settings for GitHub Copilot agent mode.
+// Merge these into your user settings.json (Command Palette: "Preferences: Open
+// User Settings (JSON)"). They belong in user settings, not in a repository's
+// .vscode/settings.json, where a cloned project could change them.
+// Test these settings before you rely on them; see copilot/README.md.
+{
+  // Never approve every tool call. VS Code describes this setting as one that
+  // "disables critical security protections".
+  "chat.tools.global.autoApprove": false,
+
+  // New chat sessions start with Default Permissions. Switch a single session to
+  // Bypass Approvals or Autopilot only when a task needs it.
+  "chat.permissions.default": "default",
+
+  // Agents stay disabled in folders you have not trusted.
+  "security.workspace.trust.enabled": true,
+
+  // Run agent terminal commands in the sandbox (Preview; macOS, Linux and WSL2;
+  // on Linux install bubblewrap and socat first). Native Windows uses the
+  // experimental "chat.agent.sandbox.enabledWindows" instead.
+  "chat.agent.sandbox.enabled": "on",
+  // With network off, local sessions on macOS and Linux allow only the domains in
+  // chat.agent.allowedNetworkDomains; an empty list blocks all outbound access.
+  "chat.agent.sandbox.allowNetwork": false,
+  "chat.agent.allowedNetworkDomains": [],
+
+  // Auto-approve only read-only commands. The terminal auto-approve list is a
+  // convenience, not a security boundary: anything not listed still asks.
+  "chat.tools.terminal.autoApprove": {
+    "git status": true,
+    "git diff": true,
+    "git log": true,
+    "ls": true,
+    "pwd": true
+  },
+
+  // Do not pick up MCP servers configured for other tools.
+  "chat.mcp.discovery.enabled": false
+}

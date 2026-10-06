@@ -1,0 +1,7 @@
+{
+  "ChatToolsAutoApprove": false,
+  "ChatAgentSandboxEnabled": true,
+  "ChatMCP": "registry",
+  "ChatAgentExtensionTools": false,
+  "ChatAllowManagedHooksOnly": true
+}

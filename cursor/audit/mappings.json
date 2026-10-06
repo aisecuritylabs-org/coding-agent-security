@@ -1,0 +1,1019 @@
+{
+  "about": "Why each Cursor audit check matters, mapped to AI security frameworks. Mappings are AISecurityLabs.org's interpretation and are not endorsed by the framework owners.",
+  "frameworks": {
+    "owasp_llm": {
+      "name": "OWASP Top 10 for LLM Applications",
+      "version": "2025",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "items": {
+        "LLM01": "Prompt Injection",
+        "LLM02": "Sensitive Information Disclosure",
+        "LLM03": "Supply Chain",
+        "LLM05": "Improper Output Handling",
+        "LLM06": "Excessive Agency"
+      }
+    },
+    "owasp_agentic": {
+      "name": "OWASP Top 10 for Agentic Applications",
+      "version": "2026",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "items": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      }
+    },
+    "mitre_atlas": {
+      "name": "MITRE ATLAS",
+      "version": "2026.09",
+      "url": "https://atlas.mitre.org/",
+      "items": {
+        "AML.T0010": "AI Supply Chain Compromise",
+        "AML.T0010.005": "AI Supply Chain Compromise: AI Agent Tool",
+        "AML.T0011.002": "User Execution: Poisoned AI Agent Tool",
+        "AML.T0025": "Exfiltration via Cyber Means",
+        "AML.T0050": "Command and Scripting Interpreter",
+        "AML.T0051": "LLM Prompt Injection",
+        "AML.T0051.001": "LLM Prompt Injection: Indirect",
+        "AML.T0053": "AI Agent Tool Invocation",
+        "AML.T0055": "Unsecured Credentials",
+        "AML.T0057": "LLM Data Leakage",
+        "AML.T0074": "Masquerading",
+        "AML.T0080": "AI Agent Context Poisoning",
+        "AML.T0081": "Modify AI Agent Configuration",
+        "AML.T0083": "Credentials from AI Agent Configuration",
+        "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
+        "AML.T0098": "AI Agent Tool Credential Harvesting",
+        "AML.T0099": "AI Agent Tool Data Poisoning",
+        "AML.T0101": "Data Destruction via AI Agent Tool Invocation",
+        "AML.T0105": "Escape to Host",
+        "AML.T0109": "AI Supply Chain Rug Pull",
+        "AML.T0110": "AI Agent Tool Poisoning",
+        "AML.T0112.000": "Machine Compromise: Local AI Agent"
+      }
+    },
+    "nist_ai_rmf": {
+      "name": "NIST AI Risk Management Framework",
+      "version": "1.0",
+      "url": "https://airc.nist.gov/airmf-resources/playbook/",
+      "items": {
+        "GOVERN 1.4": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+        "GOVERN 1.6": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+        "GOVERN 6.1": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third party's intellectual property or other rights.",
+        "MAP 4.1": "Approaches for mapping AI technology and legal risks of its components, including the use of third-party data or software, are in place, followed, and documented, as are risks of infringement of a third-party's intellectual property or other rights.",
+        "MAP 4.2": "Internal risk controls for components of the AI system including third-party AI technologies are identified and documented.",
+        "MEASURE 2.7": "AI system security and resilience, as identified in the MAP function, are evaluated and documented.",
+        "MEASURE 2.10": "Privacy risk of the AI system, as identified in the MAP function, is examined and documented.",
+        "MANAGE 2.4": "Mechanisms are in place and applied, responsibilities are assigned and understood to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+        "MANAGE 3.1": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+        "MANAGE 4.1": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management."
+      }
+    }
+  },
+  "checks": {
+    "I01": {
+      "why": "Cursor ships security fixes in its releases. CVE-2026-73217, a sandbox escape through a tampered Python virtual environment, was fixed in 3.1.2, and the DuneSlide sandbox escapes in 3.0.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0112.000",
+        "AML.T0105"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor advisory GHSA-p9g2-cr55-cw9c (CVE-2026-73217): sandbox escape through a Python virtual environment",
+          "url": "https://github.com/cursor/cursor/security/advisories/GHSA-p9g2-cr55-cw9c"
+        },
+        {
+          "title": "Cato Networks: DuneSlide, CVE-2026-50548 and CVE-2026-50549",
+          "url": "https://www.catonetworks.com/blog/duneslide-two-critical-rce-vulnerabilities"
+        }
+      ]
+    },
+    "V00": {
+      "why": "Without your Cursor settings the audit cannot tell whether Workspace Trust is on.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Agent security",
+          "url": "https://cursor.com/docs/agent/security"
+        }
+      ]
+    },
+    "V01": {
+      "why": "Cursor settings use JSON with comments. A file Cursor cannot parse is ignored, and every setting in it silently falls back to its default.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Agent security",
+          "url": "https://cursor.com/docs/agent/security"
+        }
+      ]
+    },
+    "V02": {
+      "why": "Cursor ships with Workspace Trust disabled, so every folder you open is trusted: its project hooks run and its MCP servers, allowlists and sandbox settings apply at once.",
+      "owasp_llm": [
+        "LLM01",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Agent security",
+          "url": "https://cursor.com/docs/agent/security"
+        },
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "B01": {
+      "why": "\"insecure_none\" turns the sandbox off, so every shell command the agent runs has your full user permissions and network access.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        }
+      ]
+    },
+    "B02": {
+      "why": "With networkPolicy.default set to allow, a sandboxed command can send data to any host, which removes the sandbox's main defence against exfiltration.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086",
+        "AML.T0025"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        }
+      ]
+    },
+    "B03": {
+      "why": "A wildcard in the network allow list opens every matching host, including paste sites and attacker-controlled subdomains.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        }
+      ]
+    },
+    "B04": {
+      "why": "Extra paths widen what sandboxed commands can read or write. Your home folder or credential folders hand them every key on the machine. The sandbox already leaves ~/.ssh readable.",
+      "owasp_llm": [
+        "LLM02",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        }
+      ]
+    },
+    "B05": {
+      "why": "Without a sandbox.json the defaults apply: workspace read and write, and network denied apart from Cursor's package-registry defaults.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        },
+        {
+          "title": "Cursor docs: Run modes and sandboxing",
+          "url": "https://cursor.com/docs/agent/security/run-modes"
+        }
+      ]
+    },
+    "A01": {
+      "why": "Allowlisted commands run without asking, outside the sandbox. An allowlisted shell, interpreter, delete or network tool lets a hijacked session run anything. Cursor says allowlists \"are not a security guarantee\".",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0101",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: permissions.json reference",
+          "url": "https://cursor.com/docs/reference/permissions"
+        },
+        {
+          "title": "Cursor docs: Run modes and sandboxing",
+          "url": "https://cursor.com/docs/agent/security/run-modes"
+        }
+      ]
+    },
+    "A02": {
+      "why": "A whole-server MCP allowlist entry lets every tool of that server run without asking, including tools that write or send data.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: permissions.json reference",
+          "url": "https://cursor.com/docs/reference/permissions"
+        }
+      ]
+    },
+    "A03": {
+      "why": "Auto-review block instructions steer its LLM classifier toward asking you about credentials, deletes, pushes and outbound data; allow instructions steer it toward running calls without asking. Both are \"steering, not enforcement\", and Cursor says Auto-review \"is not a security boundary\".",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Run modes and sandboxing",
+          "url": "https://cursor.com/docs/agent/security/run-modes"
+        }
+      ]
+    },
+    "M01": {
+      "why": "MCP servers configured for your user load in every project. Knowing which ones you run, and where they came from, is the first step in managing third-party risk.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 1.6",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Model Context Protocol",
+          "url": "https://cursor.com/docs/mcp"
+        }
+      ]
+    },
+    "M02": {
+      "why": "Servers that read errors, tickets, chat or email bring outsider-written text into the agent. Fake error reports have hijacked coding agents this way (Agentjacking), and CurXecute used a Slack message.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        },
+        {
+          "title": "Cato Networks (Aim Labs): CurXecute, CVE-2025-54135",
+          "url": "https://www.catonetworks.com/blog/curxecute-rce/"
+        }
+      ]
+    },
+    "M03": {
+      "why": "An unpinned MCP server runs whatever version its registry serves at start-up, so a compromised release reaches you automatically. MCPoison showed Cursor trusting later changes to an approved server.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Model Context Protocol",
+          "url": "https://cursor.com/docs/mcp"
+        },
+        {
+          "title": "Check Point Research: MCPoison, CVE-2025-54136",
+          "url": "https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/"
+        }
+      ]
+    },
+    "M04": {
+      "why": "A secret written into mcp.json can be read by anything that reads the file. Cursor supports ${env:NAME} so the value stays out of it.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Model Context Protocol",
+          "url": "https://cursor.com/docs/mcp"
+        }
+      ]
+    },
+    "H01": {
+      "why": "Hooks run commands with your privileges on agent events. A hook that downloads and runs code runs whatever that server sends, every time.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "H02": {
+      "why": "Cursor hooks fail open by default: if a security hook crashes or times out, the action proceeds. failClosed: true makes those failures block.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "L01": {
+      "why": "approvalMode \"unrestricted\" makes the Cursor CLI run every command without asking.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI configuration",
+          "url": "https://cursor.com/docs/cli/reference/configuration"
+        }
+      ]
+    },
+    "L02": {
+      "why": "With the CLI sandbox off, commands the CLI runs have your full user permissions and network access.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.2"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI parameters",
+          "url": "https://cursor.com/docs/cli/reference/parameters"
+        }
+      ]
+    },
+    "L03": {
+      "why": "Broad CLI allow entries (a shell, an interpreter, every MCP tool, every domain) let the CLI act without asking on exactly the operations an attacker wants.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI02",
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0050",
+        "AML.T0086"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI permissions",
+          "url": "https://cursor.com/docs/cli/reference/permissions"
+        }
+      ]
+    },
+    "L04": {
+      "why": "CLI deny rules take precedence over allow rules. Denying reads of .env files keeps API keys out of the model even when a command is approved.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI permissions",
+          "url": "https://cursor.com/docs/cli/reference/permissions"
+        }
+      ]
+    },
+    "P00": {
+      "why": "Without a project the audit cannot check repository files Cursor reads as configuration and instructions.",
+      "owasp_llm": [],
+      "owasp_agentic": [],
+      "mitre_atlas": [],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Rules",
+          "url": "https://cursor.com/docs/rules"
+        }
+      ]
+    },
+    "P01": {
+      "why": "A project sandbox.json takes priority over yours, so a repository can turn the sandbox off, open the network or add paths for everyone who opens it.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: sandbox.json reference",
+          "url": "https://cursor.com/docs/reference/sandbox"
+        }
+      ]
+    },
+    "P02": {
+      "why": "A project permissions.json is concatenated with yours, so a repository can add commands and MCP tools that then run without asking.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081",
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: permissions.json reference",
+          "url": "https://cursor.com/docs/reference/permissions"
+        }
+      ]
+    },
+    "P03": {
+      "why": "Project MCP servers start as local processes with your permissions. CurXecute showed a prompt injection writing .cursor/mcp.json to run commands.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0011.002"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Model Context Protocol",
+          "url": "https://cursor.com/docs/mcp"
+        },
+        {
+          "title": "Cato Networks (Aim Labs): CurXecute, CVE-2025-54135",
+          "url": "https://www.catonetworks.com/blog/curxecute-rce/"
+        }
+      ]
+    },
+    "P04": {
+      "why": "A project that wires servers reading outsider-written content into the agent gives outsiders a way to send it instructions.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI02"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0099"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "The Hacker News: Agentjacking (Jun 2026)",
+          "url": "https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html"
+        }
+      ]
+    },
+    "P05": {
+      "why": "An unpinned project MCP server runs whatever version its registry serves, for everyone who opens the repository.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0010.005",
+        "AML.T0109"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Model Context Protocol",
+          "url": "https://cursor.com/docs/mcp"
+        }
+      ]
+    },
+    "P06": {
+      "why": "Project hooks load automatically in a trusted workspace and run commands on agent events for every collaborator, and cloud agents run them too.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "P07": {
+      "why": "A project hook that downloads and runs code gives the repository, or whoever controls that download, code execution on your machine.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "P08": {
+      "why": "A project .cursor/cli.json adds permissions for the Cursor CLI in that repository.",
+      "owasp_llm": [
+        "LLM03",
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI04"
+      ],
+      "mitre_atlas": [
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI configuration",
+          "url": "https://cursor.com/docs/cli/reference/configuration"
+        }
+      ]
+    },
+    "P09": {
+      "why": "Rules files (.cursor/rules, .cursorrules, AGENTS.md, CLAUDE.md) are loaded as instructions. A repository can use them for persistent prompt injection.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Rules",
+          "url": "https://cursor.com/docs/rules"
+        }
+      ]
+    },
+    "P10": {
+      "why": "Zero-width and bidirectional control characters hide instructions from people while the model still reads them. Pillar Security showed this \"Rules File Backdoor\" steering Cursor and Copilot.",
+      "owasp_llm": [
+        "LLM01"
+      ],
+      "owasp_agentic": [
+        "ASI01",
+        "ASI06"
+      ],
+      "mitre_atlas": [
+        "AML.T0051.001",
+        "AML.T0080"
+      ],
+      "nist_ai_rmf": [
+        "MAP 4.1",
+        "MEASURE 2.7"
+      ],
+      "sources": [
+        {
+          "title": "Pillar Security: Rules File Backdoor",
+          "url": "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+        }
+      ]
+    },
+    "P11": {
+      "why": "environment.json install commands run in cloud agent machines and worktrees.json setup commands run in new worktrees. A command that downloads and runs code runs it with that environment's secrets.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Cloud agent security",
+          "url": "https://cursor.com/docs/cloud-agent/security"
+        }
+      ]
+    },
+    "P12": {
+      "why": ".env files hold API keys and connection strings. If they are not ignored by git, one \"commit everything\" publishes them.",
+      "owasp_llm": [
+        "LLM02"
+      ],
+      "owasp_agentic": [
+        "ASI03"
+      ],
+      "mitre_atlas": [
+        "AML.T0055"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.10"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: Agent security",
+          "url": "https://cursor.com/docs/agent/security"
+        }
+      ]
+    },
+    "P13": {
+      "why": "A link with an innocent name can point at agent configuration or dotfiles. Researchers showed approval prompts displaying the harmless name while the write landed on the real target (SymJack), and DuneSlide used a symlink to escape Cursor's sandbox.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI05",
+        "ASI09"
+      ],
+      "mitre_atlas": [
+        "AML.T0074",
+        "AML.T0081"
+      ],
+      "nist_ai_rmf": [
+        "MEASURE 2.7",
+        "MAP 4.1"
+      ],
+      "sources": [
+        {
+          "title": "Adversa AI: SymJack",
+          "url": "https://adversa.ai/blog/the-approval-prompt-is-lying-to-you-symlink-rce-in-five-ai-coding-agents-claude-code-cursor-antigravity-copilot-grok-build/"
+        },
+        {
+          "title": "Cato Networks: DuneSlide, CVE-2026-50548 and CVE-2026-50549",
+          "url": "https://www.catonetworks.com/blog/duneslide-two-critical-rce-vulnerabilities"
+        }
+      ]
+    },
+    "P14": {
+      "why": "Git hooks and settings such as core.fsmonitor run programs during ordinary git commands, which agents run constantly. CVE-2026-26268 used a git hook to run code outside Cursor's sandbox.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0010",
+        "AML.T0112.000"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Novee: CVE-2026-26268, git hook code execution in Cursor",
+          "url": "https://novee.security/blog/cursor-ide-cve-2026-26268-git-hook-arbitrary-code-execution/"
+        }
+      ]
+    },
+    "W01": {
+      "why": "Windows doesn't restrict new folders under ProgramData. Cymulate showed a standard user creating C:\\ProgramData\\Cursor and planting a hooks.json that loads for every user on the machine; it was unresolved at publication.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cymulate: privilege escalation through ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        },
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "W02": {
+      "why": "Machine-wide hooks run for every Cursor user on the machine. One that downloads and runs code runs it in every session.",
+      "owasp_llm": [
+        "LLM03"
+      ],
+      "owasp_agentic": [
+        "ASI04",
+        "ASI05"
+      ],
+      "mitre_atlas": [
+        "AML.T0081",
+        "AML.T0010"
+      ],
+      "nist_ai_rmf": [
+        "GOVERN 6.1",
+        "MANAGE 3.1"
+      ],
+      "sources": [
+        {
+          "title": "Cymulate: privilege escalation through ProgramData configuration in AI coding tools",
+          "url": "https://cymulate.com/blog/cve-2026-35603-ai-coding-tools-privilege-escalation/"
+        },
+        {
+          "title": "Cursor docs: Hooks",
+          "url": "https://cursor.com/docs/hooks"
+        }
+      ]
+    },
+    "S01": {
+      "why": "An alias that adds --yolo, --force, --sandbox disabled or --approve-mcps silently removes approvals or the sandbox from every Cursor CLI session you start.",
+      "owasp_llm": [
+        "LLM06"
+      ],
+      "owasp_agentic": [
+        "ASI09",
+        "ASI10"
+      ],
+      "mitre_atlas": [
+        "AML.T0053"
+      ],
+      "nist_ai_rmf": [
+        "MANAGE 2.4",
+        "GOVERN 1.4"
+      ],
+      "sources": [
+        {
+          "title": "Cursor docs: CLI parameters",
+          "url": "https://cursor.com/docs/cli/reference/parameters"
+        }
+      ]
+    }
+  }
+}

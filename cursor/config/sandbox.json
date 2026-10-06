@@ -1,0 +1,12 @@
+{
+  "type": "workspace_readwrite",
+  "networkPolicy": {
+    "default": "deny",
+    "allow": [
+      "registry.npmjs.org",
+      "pypi.org",
+      "files.pythonhosted.org"
+    ]
+  },
+  "disableTmpWrite": false
+}

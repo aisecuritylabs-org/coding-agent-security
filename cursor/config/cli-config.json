@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "editor": { "vimMode": false },
+  "approvalMode": "allowlist",
+  "permissions": {
+    "allow": [
+      "Shell(ls)",
+      "Shell(git:status*)",
+      "Shell(git:diff*)",
+      "Shell(git:log*)"
+    ],
+    "deny": [
+      "Read(**/.env*)",
+      "Write(**/.env*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Write(**/*.key)",
+      "Shell(rm)",
+      "Shell(sudo)"
+    ]
+  }
+}

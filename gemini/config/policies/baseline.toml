@@ -1,0 +1,17 @@
+# Save as ~/.gemini/policies/baseline.toml. When several rules match a tool
+# call, the one with the highest priority wins. Test these rules before you rely
+# on them; see gemini/README.md.
+
+# Never delete recursively or escalate privileges.
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = ["rm -rf", "rm -r", "sudo"]
+decision = "deny"
+priority = 200
+
+# Ask before anything that publishes, pushes or reaches the network.
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = ["git push", "npm publish", "curl", "wget", "ssh", "scp"]
+decision = "ask_user"
+priority = 100

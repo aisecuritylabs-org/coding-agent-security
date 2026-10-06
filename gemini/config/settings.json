@@ -1,0 +1,21 @@
+{
+  "general": {
+    "defaultApprovalMode": "default"
+  },
+  "tools": {
+    "sandbox": true,
+    "sandboxNetworkAccess": false,
+    "allowed": [
+      "run_shell_command(git status)",
+      "run_shell_command(git diff)",
+      "run_shell_command(git log)"
+    ]
+  },
+  "security": {
+    "folderTrust": {
+      "enabled": true
+    },
+    "disableYoloMode": true,
+    "enablePermanentToolApproval": false
+  }
+}

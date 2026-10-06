@@ -16,9 +16,9 @@ on:
   push:
     branches: [main]
     tags: ['v*.*.*']
-    paths: ['claude-code/**', '.github/workflows/audit-image.yml']
+    paths: ['claude-code/**', 'common/**', '.github/workflows/audit-image.yml']
   pull_request:
-    paths: ['claude-code/**', '.github/workflows/audit-image.yml']
+    paths: ['claude-code/**', 'common/**', '.github/workflows/audit-image.yml']
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Shared .gitignore matcher tests
+        run: bash common/tests/test-gitignore.sh
 
       - name: Hook test suite
         run: bash claude-code/tests/test-hooks.sh
@@ -79,7 +82,8 @@ jobs:
       - id: build
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
-          context: claude-code
+          # Repository root: the image includes common/gitignore.sh.
+          context: .
           file: claude-code/audit/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}

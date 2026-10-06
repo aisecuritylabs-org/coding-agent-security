@@ -1,0 +1,10 @@
+// Merge into your VS Code user settings.json for Gemini Code Assist. Agent mode
+// also reads ~/.gemini/settings.json, so apply settings.json from this folder too.
+// Test these settings before you rely on them; see gemini/README.md.
+{
+  // Keep agent mode asking before it acts.
+  "geminicodeassist.agentYoloMode": false,
+
+  // Agent mode's YOLO setting works only in trusted workspaces; keep trust on.
+  "security.workspace.trust.enabled": true
+}

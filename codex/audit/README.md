@@ -29,12 +29,20 @@ cd ~/code/my-app            # the project you want to audit
 bash ~/coding-agent-security/codex/audit/run.sh
 ```
 
-**Windows** (Command Prompt or PowerShell):
+**Windows, Command Prompt:**
 
 ```bat
 git clone https://github.com/aisecuritylabs-org/coding-agent-security.git "%USERPROFILE%\coding-agent-security"
 cd /d C:\Projects\my-app
 powershell -NoProfile -ExecutionPolicy Bypass -File "%USERPROFILE%\coding-agent-security\codex\audit\run.ps1"
+```
+
+**Windows, PowerShell:**
+
+```powershell
+git clone https://github.com/aisecuritylabs-org/coding-agent-security.git "$HOME\coding-agent-security"
+Set-Location C:\Projects\my-app
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\coding-agent-security\codex\audit\run.ps1"
 ```
 
 On Windows the launcher also checks who can write `C:\ProgramData\OpenAI\Codex`, which the container can't see.

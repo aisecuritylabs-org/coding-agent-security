@@ -1,0 +1,7 @@
+// Merge into your Cursor user settings.json (Command Palette: "Preferences: Open
+// User Settings (JSON)"). Cursor ships with Workspace Trust disabled, so every
+// folder you open, with its hooks, MCP servers and allowlists, is trusted.
+// Test these settings before you rely on them; see cursor/README.md.
+{
+  "security.workspace.trust.enabled": true
+}
